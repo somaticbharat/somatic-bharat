@@ -12,7 +12,7 @@ export default function App() {
 
   // Homepage View
   if (view === 'home') {
-    return (
+    return (  
       <SafeAreaView style={styles.homeContainer}>
         <View style={styles.nav}>
           <Text style={styles.logo}>SOMATIC BHARAT</Text>
