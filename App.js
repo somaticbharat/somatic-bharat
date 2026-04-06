@@ -118,11 +118,7 @@ export default function App() {
 
       </ScrollView>
 
-      {/* FLOATING ACTION BUTTON */}
-      <TouchableOpacity style={styles.fab}>
-        <Text style={styles.fabIcon}>⚕️</Text>
-        <Text style={styles.fabText}>3-MIN MSR AUDIT</Text>
-      </TouchableOpacity>
+      
     </SafeAreaView>
   );
 }
