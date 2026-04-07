@@ -9,6 +9,7 @@ const TRANSLATIONS = {
   en: {
     step: "STEP",
     vector: "VECTOR",
+    back: "BACK",
     options: [
       { l: 'STRONGLY DISAGREE', v: 0, icon: 'thumb-down', color: '#FF5252' },
       { l: 'DISAGREE', v: 1, icon: 'thumb-down-outline', color: '#FFAB40' },
@@ -20,6 +21,7 @@ const TRANSLATIONS = {
   as: {
     step: "পদক্ষেপ",
     vector: "ভেক্টৰ",
+    back: "পাছলৈ",
     options: [
       { l: 'দৃঢ়ভাৱে একমত নহয়', v: 0, icon: 'thumb-down', color: '#FF5252' },
       { l: 'একমত নহয়', v: 1, icon: 'thumb-down-outline', color: '#FFAB40' },
@@ -53,7 +55,7 @@ const QUESTIONS = [
   { v: 'NEURAL', en: "Do you startle easily or feel constantly 'on edge' (The Beta State)?", as: "আপুনি অতি সহজে উচপ খাই উঠে নেকি বা সদায় এক সজাগ অৱস্থাত থাকে নেকি?" },
   { v: 'NEURAL', en: "Does your skin feel painful or tender to even a very light touch?", as: "পাতল স্পৰ্শ কৰিলেও আপোনাৰ ছালত বিষ বা অস্বস্তি অনুভৱ হয় নেকি?" },
   { v: 'NEURAL', en: "Do you experience 'Brain Fog' or difficulty finding words under mild stress?", as: "মানসিক চাপৰ সময়ত আপুনি কথা পাহৰি যোৱা বা মগজুত এক ধুঁৱলী-কুঁৱলী (Brain Fog) অনুভৱ কৰে নেকি?" },
-  { v: 'NEURAL', en: "Is your sleep frequently interrupted by a mind that won't stop racing?", as: "অবিৰাম চিন্তাৰ বাবে আপোনাৰ টোপনিত সঘনাই ব্যাঘাত ঘটে নেকি?" },
+  { v: 'NEURAL', en: "Is your sleep frequently interrupted by a mind that won't stop racing?", as: "অবিৰাম চিন্তাৰ বাবে আপোনাৰ টোপনিত সঘনাই ব্যাঘাত ঘটে নেকি?"},
 
   // ATMOSPHERIC VECTOR
   { v: 'ATMOSPHERIC', en: "Does your pain increase significantly with changes in weather or pressure?", as: "বতৰ বা বায়ুমণ্ডলৰ চাপ সলনি হ'লে আপোনাৰ বিষ বৃদ্ধি পায় নেকি?" },
@@ -82,7 +84,8 @@ const QUESTIONS = [
 
 export default function AuditScreen({ onComplete }) {
   const [current, setCurrent] = useState(0);
-  const [lang, setLang] = useState('en'); // Language Toggle State
+  const [lang, setLang] = useState('en'); 
+  const [history, setHistory] = useState([]); // Track previous answer values to subtract on back
   const [scores, setScores] = useState({ 
     MECHANICAL: 0, ANCESTRAL: 0, NEURAL: 0, 
     ATMOSPHERIC: 0, STRUCTURAL: 0, HUMORAL: 0 
@@ -94,11 +97,36 @@ export default function AuditScreen({ onComplete }) {
     const vector = QUESTIONS[current].v;
     const newScores = { ...scores, [vector]: scores[vector] + val };
     
+    // Save the value to history so we can subtract it if user goes back
+    setHistory([...history, val]);
+
     if (current < QUESTIONS.length - 1) {
       setScores(newScores);
       setCurrent(current + 1);
     } else {
       onComplete(newScores); 
+    }
+  };
+
+  const handleBack = () => {
+    if (current > 0) {
+      const prevIndex = current - 1;
+      const vectorToReduce = QUESTIONS[prevIndex].v;
+      const valueToSubtract = history[history.length - 1];
+
+      // Update Scores by subtracting the last value
+      setScores({
+        ...scores,
+        [vectorToReduce]: scores[vectorToReduce] - valueToSubtract
+      });
+
+      // Update History by removing the last entry
+      const newHistory = [...history];
+      newHistory.pop();
+      setHistory(newHistory);
+
+      // Go back one question
+      setCurrent(prevIndex);
     }
   };
 
@@ -110,6 +138,14 @@ export default function AuditScreen({ onComplete }) {
       </TouchableOpacity>
 
       <View style={styles.header}>
+        {/* BACK BUTTON */}
+        {current > 0 && (
+          <TouchableOpacity style={styles.backBtn} onPress={handleBack}>
+            <MaterialCommunityIcons name="arrow-left" size={20} color={MATTE_GOLD} />
+            <Text style={styles.backBtnText}>{t.back}</Text>
+          </TouchableOpacity>
+        )}
+
         <Text style={styles.progressText}>{t.vector}: {QUESTIONS[current].v}</Text>
         <Text style={styles.stepText}>{t.step} {current + 1} / 36</Text>
         <View style={styles.progressBar}>
@@ -143,6 +179,8 @@ const styles = StyleSheet.create({
   langToggle: { position: 'absolute', top: 50, right: 20, zIndex: 1000, backgroundColor: MATTE_GOLD, padding: 8, borderRadius: 20 },
   langToggleText: { color: DEEP_BLUE, fontWeight: '900', fontSize: 10 },
   header: { padding: 20, borderBottomWidth: 1, borderColor: '#EEE', alignItems: 'center', marginTop: 40 },
+  backBtn: { position: 'absolute', left: 20, top: 20, flexDirection: 'row', alignItems: 'center' },
+  backBtnText: { color: MATTE_GOLD, fontSize: 12, fontWeight: 'bold', marginLeft: 5 },
   progressText: { color: MATTE_GOLD, fontWeight: '900', fontSize: 11, letterSpacing: 1.5 },
   stepText: { color: '#999', fontSize: 10, marginTop: 4, fontWeight: '600' },
   progressBar: { height: 4, width: '100%', backgroundColor: '#EEE', marginTop: 15, borderRadius: 2, overflow: 'hidden' },
