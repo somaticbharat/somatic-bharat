@@ -1,195 +1,46 @@
-import React from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, SafeAreaView, Dimensions, StatusBar, Image } from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView } from 'react-native';
 
-const { width } = Dimensions.get('window');
+// IMPORT YOUR THREE SCREENS
+import HomeScreen from './screens/HomeScreen';
+import AuditScreen from './screens/AuditScreen';
+import ResultScreen from './screens/ResultScreen';
 
-// Palette: Deep Mission Teal (#004D40), MSR Gold (#C5A059), Bone White (#F9F8F4)
 export default function App() {
+  const [view, setView] = useState('HOME'); // HOME, AUDIT, RESULT
+  const [auditResults, setAuditResults] = useState(null);
+
+  // 1. Logic to start Audit from Home
+  const startAudit = () => setView('AUDIT');
+
+  // 2. Logic to handle results coming from AuditScreen
+  const finishAudit = (scores) => {
+    setAuditResults(scores);
+    setView('RESULT');
+  };
+
+  // 3. Logic to restart from ResultScreen
+  const resetApp = () => {
+    setAuditResults(null);
+    setView('HOME');
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" />
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFF' }}>
       
-      {/* PERSISTENT ACTION HEADER */}
-      <View style={styles.header}>
-        <Text style={styles.logo}>SOMATIC <Text style={{color: '#C5A059'}}>BHARAT</Text></Text>
-        <TouchableOpacity style={styles.headerBtn}>
-          <Text style={styles.headerBtnText}>MSR AUDIT</Text>
-        </TouchableOpacity>
-      </View>
+      {/* NAVIGATION LOGIC */}
+      {view === 'HOME' && (
+        <HomeScreen onStart={startAudit} />
+      )}
 
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        
-        {/* HERO: FOUNDER & MSR PROTOCOL VISION */}
-        <View style={styles.hero}>
-          <View style={styles.founderFrame}>
-            <Image 
-              source={require('./assets/dr-mp-das.png')} // ← LOOKING FOR YOUR PHOTO HERE
-              style={styles.founderImage} 
-              resizeMode="cover"
-            />
-            <View style={styles.founderLabelFrame}>
-              <Text style={styles.eyebrow}>FOUNDING ARCHITECT</Text>
-              <Text style={styles.title}>Dr. MP Das PT, LLB</Text>
-              <Text style={styles.founderSub}>Physiotherapist & Legal Consultant</Text>
-            </View>
-          </View>
-          <Text style={styles.heroSubtitle}>
-            MRI Clear. Blood reports normal. Yet the fatigue, brain fog, and migrating pain persist. 
-            You aren't imagining it—you are experiencing <Text style={{color: '#C5A059', fontWeight: 'bold'}}>Central Sensitization.</Text>
-          </Text>
-          <View style={styles.goldLine} />
-        </View>
+      {view === 'AUDIT' && (
+        <AuditScreen onComplete={finishAudit} />
+      )}
 
-        {/* DATA & AWARENESS */}
-        <View style={styles.statsCard}>
-          <Text style={styles.statsTitle}>A National Somatic Epidemic</Text>
-          <Text style={styles.statsText}>
-            Over <Text style={styles.boldTeal}>80% of sufferers are women</Text>—mothers, homemakers, and professionals silenced by an invisible fire.
-          </Text>
-          <View style={styles.divider} />
-          <Text style={styles.statsText}>
-            This is the systemic "NF-kB Fire" turning local muscle knots into total neural sensitization.
-          </Text>
-        </View>
+      {view === 'RESULT' && (
+        <ResultScreen scores={auditResults} onReset={resetApp} />
+      )}
 
-        {/* --- UPDATE: THE 6 MANASH VECTORS (MSR PROTOCOL) --- */}
-        <View style={styles.vectorsSection}>
-          <Text style={styles.vectorSectionLabel}>MSR DISCOVERY</Text>
-          <Text style={styles.vectorSectionTitle}>The 6 MANASH Vectors</Text>
-          <Text style={styles.vectorSectionSubtitle}>
-            Dr. Das identified how local muscle knots, if uncontrolled, eventually re-wire the brain through six interlocking somatic channels.
-          </Text>
-          
-          <View style={styles.vectorList}>
-            {[
-              { t: 'MEC (Mechanical)', d: 'Local tissue integrity, knot formation, and load-transfer efficiency.' },
-              { t: 'ANC (Ancestral)', d: 'Epigenetic trauma tags and learned neuroplastic patterns.' },
-              { t: 'NEU (Neural)', d: 'Vagal tone, brain fog, and Central/Neural Sensitization status.' },
-              { t: 'ATM (Atmospheric)', d: 'Sensory load, environmental stressors, and workspace ergonomics.' },
-              { t: 'STR (Structural)', d: 'Fascial de-densification and whole-body alignment.' },
-              { t: 'HUM (Humoral)', d: 'Systemic inflammation markers, including the NF-kB Fire.' }
-            ].map((vector, i) => (
-              <View key={i} style={styles.vectorItem}>
-                <View style={styles.vectorInitialFrame}>
-                  <Text style={styles.vectorInitial}>{vector.t}</Text>
-                </View>
-                <View style={styles.vectorTextFrame}>
-                  <Text style={styles.vectorTitle}>{vector.t.split(' ')[0]} Vector</Text>
-                  <Text style={styles.vectorDesc}>{vector.desc}</Text>
-                </View>
-              </View>
-            ))}
-          </View>
-        </View>
-
-        {/* THE SHATKONA PILLARS */}
-        <View style={styles.pillarsSection}>
-          <Text style={styles.pillarSectionLabel}>MSR PROTOCOL PILLARS</Text>
-          {[
-            { t: 'Quantum Breathing', d: 'Inhibiting the NF-kB fire.' },
-            { t: 'Fascia Stretching', d: 'De-densification.' },
-            { t: 'Chakra Bhedanam', d: 'Empathic shielding.' },
-            { t: 'Mahanidra', d: 'Neuroplasticity & Deleting DNA Tags.' },
-          ].map((pillar, i) => (
-            <View key={i} style={styles.pillarItem}>
-              <View style={styles.pillarDot} />
-              <View>
-                <Text style={styles.pillarTitle}>{i+1}. {pillar.t}</Text>
-                <Text style={styles.pillarDesc}>{pillar.d}</Text>
-              </View>
-            </View>
-          ))}
-        </View>
-
-        {/* THE AIM: MISSION 2047 */}
-        <View style={styles.missionSection}>
-          <Text style={styles.missionHeadline}>100 Million Indians by 2047</Text>
-          <Text style={styles.missionDesc}>
-            From youth to seniors, the <Text style={styles.boldWhite}>Somatic Bharat Mission</Text> aims to empower Bharat with Somatic Education and NeuroResilience—for an lifelong complete systemic reset.
-          </Text>
-        </View>
-
-        {/* FOUNDATION FOOTER */}
-        <View style={styles.footer}>
-          <Text style={styles.footerLogo}>SOMATIC BHARAT FOUNDATION</Text>
-          <Text style={styles.footerAffil}>SIBS Academy | TISRI | Guwahati</Text>
-          <Text style={styles.footerMission}>Section 8 Company | Building NeuroResilience</Text>
-        </View>
-
-      </ScrollView>
-
-      
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#004D40' },
-  header: { 
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
-    alignItems: 'center', 
-    padding: 20, 
-    backgroundColor: '#004D40',
-    borderBottomWidth: 1,
-    borderBottomColor: '#00332B'
-  },
-  logo: { fontSize: 16, fontWeight: '900', color: '#F9F8F4', letterSpacing: 2 },
-  headerBtn: { backgroundColor: '#C5A059', paddingHorizontal: 15, paddingVertical: 8, borderRadius: 5 },
-  headerBtnText: { color: '#004D40', fontWeight: 'bold', fontSize: 11 },
-  
-  scrollContent: { backgroundColor: '#F9F8F4' },
-  
-  hero: { padding: 30, backgroundColor: '#FFFFFF', alignItems: 'center' },
-  founderFrame: { flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#F0F0F0', paddingBottom: 20 },
-  founderImage: { width: width * 0.25, height: width * 0.35, borderRadius: 10, marginRight: 20 },
-  founderLabelFrame: { flex: 1 },
-  eyebrow: { color: '#004D40', fontSize: 10, fontWeight: 'bold', letterSpacing: 1.5 },
-  title: { color: '#1A1A1A', fontSize: 24, fontWeight: '900', marginTop: 5 },
-  founderSub: { color: '#C5A059', fontSize: 12, fontWeight: '700', marginTop: 3 },
-  heroSubtitle: { color: '#444', fontSize: 16, marginTop: 25, lineHeight: 24, textAlign: 'center' },
-  goldLine: { width: 50, height: 4, backgroundColor: '#C5A059', marginTop: 25, alignSelf: 'center' },
-
-  statsCard: { margin: 20, marginTop: -30, backgroundColor: '#FFF', borderRadius: 15, padding: 25, elevation: 8, shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 10 },
-  statsTitle: { fontSize: 12, fontWeight: 'bold', color: '#C5A059', letterSpacing: 1, marginBottom: 10 },
-  statsText: { fontSize: 15, color: '#333', lineHeight: 22 },
-  boldTeal: { color: '#004D40', fontWeight: 'bold' },
-  divider: { height: 1, backgroundColor: '#EEE', marginVertical: 15 },
-
-  vectorsSection: { padding: 30, backgroundColor: '#FFFFFF' },
-  vectorSectionLabel: { fontSize: 10, fontWeight: 'bold', color: '#C5A059', letterSpacing: 2 },
-  vectorSectionTitle: { fontSize: 28, fontWeight: '900', color: '#004D40', marginTop: 5 },
-  vectorSectionSubtitle: { fontSize: 15, color: '#666', lineHeight: 22, marginTop: 15, marginBottom: 30 },
-  vectorList: { gap: 15 },
-  vectorItem: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#F9F8F4', padding: 15, borderRadius: 10 },
-  vectorInitialFrame: { width: 50, height: 50, borderRadius: 25, backgroundColor: '#004D40', justifyContent: 'center', alignItems: 'center', marginRight: 15 },
-  vectorInitial: { fontSize: 16, fontWeight: '900', color: '#FFFFFF' },
-  vectorTextFrame: { flex: 1 },
-  vectorTitle: { fontSize: 18, fontWeight: 'bold', color: '#004D40' },
-  vectorDesc: { fontSize: 12, color: '#666', marginTop: 2 },
-
-  pillarsSection: { padding: 30, backgroundColor: '#F0EFEA' },
-  pillarSectionLabel: { fontSize: 11, fontWeight: 'bold', color: '#C5A059', marginBottom: 20 },
-  pillarItem: { flexDirection: 'row', marginBottom: 20 },
-  pillarDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: '#004D40', marginTop: 8, marginRight: 15 },
-  pillarTitle: { color: '#1A1A1A', fontSize: 16, fontWeight: 'bold' },
-  pillarDesc: { color: '#555', fontSize: 12, marginTop: 2 },
-
-  missionSection: { padding: 40, backgroundColor: '#004D40', alignItems: 'center' },
-  missionHeadline: { color: '#FFFFFF', fontSize: 22, fontWeight: '900', textAlign: 'center' },
-  missionDesc: { color: '#F9F8F4', fontSize: 14, marginTop: 15, lineHeight: 22, textAlign: 'center' },
-  boldWhite: { color: '#FFFFFF', fontWeight: 'bold' },
-
-  footer: { padding: 50, backgroundColor: '#00332B', alignItems: 'center' },
-  footerLogo: { color: '#F9F8F4', fontWeight: '900', letterSpacing: 2 },
-  footerAffil: { color: '#C5A059', fontSize: 11, fontWeight: '700', marginTop: 5 },
-  footerMission: { color: '#6A8E8A', fontSize: 10, marginTop: 3 },
-
-  fab: { 
-    position: 'absolute', bottom: 30, right: 20, backgroundColor: '#C5A059', 
-    flexDirection: 'row', alignItems: 'center', paddingVertical: 15, paddingHorizontal: 25, 
-    borderRadius: 30, elevation: 10 
-  },
-  fabIcon: { fontSize: 20, marginRight: 10 },
-  fabText: { color: '#004D40', fontWeight: '900', fontSize: 14 }
-});

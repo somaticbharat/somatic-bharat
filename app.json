@@ -1,29 +1,22 @@
 {
   "expo": {
-    "name": "somatic-web",
-    "slug": "somatic-web",
+    "name": "Somatic Bharat",
+    "slug": "somatic-bharat",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "ios": {
-      "supportsTablet": true
+      "backgroundColor": "#004D40" 
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#004D40"
       },
-      "edgeToEdgeEnabled": true
+      "package": "com.somaticbharat.app"
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    }
+    "userInterfaceStyle": "light"
   }
 }
