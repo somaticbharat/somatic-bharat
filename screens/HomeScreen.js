@@ -193,7 +193,7 @@ export default function HomeScreen({ onStart }) {
             <Text style={styles.footerMission}>{t.mission}</Text>
             <Text style={styles.missionSub}>{t.missionSub}</Text>
           </View>
-          <Text style={styles.copyrightText}>© 2026 SOMATIC BHARAT. ALL RIGHTS RESERVED.</Text>
+          <Text style={styles.copyrightText}>Powered by FasciaMax Shatvayu | ShatkonaLife © 2026 SOMATIC BHARAT. ALL RIGHTS RESERVED.</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
