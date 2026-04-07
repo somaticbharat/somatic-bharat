@@ -169,7 +169,7 @@ export default function HomeScreen({ onStart }) {
             // LOCKED STATE MESSAGE
             <View style={styles.lockedBtn}>
               <Text style={styles.lockedBtnText}>
-                Swipe all pillars to unlock Audit
+                Swipe all pillars to unlock Audit ↑
               </Text>
             </View>
           )}
