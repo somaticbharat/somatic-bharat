@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 
 const DEEP_BLUE = '#002147';
 const MATTE_GOLD = '#C5A059';
@@ -49,7 +50,7 @@ const QUESTIONS = [
   { v: 'HUMORAL', q: "Do you feel 'tired but wired'—exhausted but unable to achieve deep sleep?" }
 ];
 
-export default function AuditScreen({ onComplete }) { // Changed from {navigation}
+export default function AuditScreen({ onComplete }) {
   const [current, setCurrent] = useState(0);
   const [scores, setScores] = useState({ 
     MECHANICAL: 0, ANCESTRAL: 0, NEURAL: 0, 
@@ -64,10 +65,17 @@ export default function AuditScreen({ onComplete }) { // Changed from {navigatio
       setScores(newScores);
       setCurrent(current + 1);
     } else {
-      // Send the results back to App.js
       onComplete(newScores); 
     }
   };
+
+  const OPTIONS = [
+    { l: 'STRONGLY DISAGREE', v: 0, icon: 'thumb-down', color: '#FF5252' },
+    { l: 'DISAGREE', v: 1, icon: 'thumb-down-outline', color: '#FFAB40' },
+    { l: 'NEUTRAL', v: 2, icon: 'minus-circle-outline', color: '#9E9E9E' },
+    { l: 'AGREE', v: 3, icon: 'thumb-up-outline', color: '#4DB6AC' },
+    { l: 'STRONGLY AGREE', v: 5, icon: 'thumb-up', color: '#00FFFF' }
+  ];
 
   return (
     <SafeAreaView style={styles.container}>
@@ -82,11 +90,16 @@ export default function AuditScreen({ onComplete }) { // Changed from {navigatio
       <View style={styles.qBox}>
         <Text style={styles.qText}>{QUESTIONS[current].q}</Text>
         <View style={styles.options}>
-          {[
-            {l:'NEVER', v:0}, {l:'RARELY', v:1}, {l:'OFTEN', v:3}, {l:'CHRONIC', v:5}
-          ].map((opt) => (
-            <TouchableOpacity key={opt.l} style={styles.optBtn} onPress={() => handleAnswer(opt.v)}>
-              <Text style={styles.optLabel}>{opt.l}</Text>
+          {OPTIONS.map((opt) => (
+            <TouchableOpacity 
+              key={opt.l} 
+              style={[styles.optBtn, { borderLeftColor: opt.color, borderLeftWidth: 4 }]} 
+              onPress={() => handleAnswer(opt.v)}
+            >
+              <View style={styles.btnContent}>
+                <MaterialCommunityIcons name={opt.icon} size={24} color={opt.color} />
+                <Text style={[styles.optLabel, { color: DEEP_BLUE }]}>{opt.l}</Text>
+              </View>
             </TouchableOpacity>
           ))}
         </View>
@@ -105,6 +118,7 @@ const styles = StyleSheet.create({
   qBox: { flex: 1, justifyContent: 'center', padding: 30 },
   qText: { fontSize: 22, fontWeight: '800', color: DEEP_BLUE, marginBottom: 40, textAlign: 'center', lineHeight: 32 },
   options: { width: '100%' },
-  optBtn: { backgroundColor: '#FFF', padding: 18, borderRadius: 12, marginBottom: 15, borderWidth: 1, borderColor: '#E0E0E0' },
-  optLabel: { textAlign: 'center', fontWeight: '900', color: DEEP_BLUE, fontSize: 13 }
+  optBtn: { backgroundColor: '#FFF', padding: 15, borderRadius: 12, marginBottom: 10, borderWidth: 1, borderColor: '#E0E0E0' },
+  btnContent: { flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' },
+  optLabel: { fontWeight: '900', fontSize: 12, marginLeft: 15, letterSpacing: 1 }
 });
