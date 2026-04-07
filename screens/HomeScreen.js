@@ -351,7 +351,35 @@ aboutSection: { padding: 30, backgroundColor: '#F9F8F4' },
     opacity: 0.4, 
     letterSpacing: 1 
   },
-  // LOCKED STATE
-  lockedBtn: { backgroundColor: '#EEE', paddingVertical: 20, paddingHorizontal: 40, borderRadius: 35, width: '100%', alignItems: 'center' },
-  lockedBtnText: { color: '#999', fontSize: 11, fontStyle: 'italic', textTransform: 'uppercase' }
+ // UPDATED LOCKED STATE WITH CYAN NEON GLOW
+  lockedBtn: { 
+    backgroundColor: 'rgba(0, 33, 71, 0.8)', // Darker base to make the neon pop
+    paddingVertical: 20, 
+    paddingHorizontal: 40, 
+    borderRadius: 35, 
+    width: '100%', 
+    alignItems: 'center',
+    
+    // THE NEON BORDER
+    borderWidth: 1.5,
+    borderColor: '#00FFFF', // Pure Cyan
+    
+    // NEON GLOW (iOS)
+    shadowColor: '#00FFFF',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.8,
+    shadowRadius: 10,
+    
+    // NEON GLOW (Android)
+    elevation: 8, 
+  },
+  lockedBtnText: { 
+    color: '#00FFFF', // Matching Cyan text for the "lit" look
+    fontSize: 11, 
+    fontStyle: 'italic', 
+    textTransform: 'uppercase',
+    fontWeight: '900',
+    letterSpacing: 1.5,
+    opacity: 0.7 // Slightly dimmed since it's locked
+  }
 });
