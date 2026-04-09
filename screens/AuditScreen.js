@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, ScrollView } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 
 const DEEP_BLUE = '#002147';
@@ -82,10 +82,10 @@ const QUESTIONS = [
   { v: 'HUMORAL', en: "Do you feel 'tired but wired'—exhausted but unable to achieve deep sleep?", as: "আপুনি অতিশয় ভাগৰুৱা অনুভৱ কৰিও গভীৰ টোপনি যাবলৈ অক্ষম হয় নেকি?" }
 ];
 
-export default function AuditScreen({ onComplete }) {
+export default function AuditScreen({ onComplete, onExit }) {
   const [current, setCurrent] = useState(0);
   const [lang, setLang] = useState('en'); 
-  const [history, setHistory] = useState([]); // Track previous answer values to subtract on back
+  const [history, setHistory] = useState([]); 
   const [scores, setScores] = useState({ 
     MECHANICAL: 0, ANCESTRAL: 0, NEURAL: 0, 
     ATMOSPHERIC: 0, STRUCTURAL: 0, HUMORAL: 0 
@@ -96,8 +96,6 @@ export default function AuditScreen({ onComplete }) {
   const handleAnswer = (val) => {
     const vector = QUESTIONS[current].v;
     const newScores = { ...scores, [vector]: scores[vector] + val };
-    
-    // Save the value to history so we can subtract it if user goes back
     setHistory([...history, val]);
 
     if (current < QUESTIONS.length - 1) {
@@ -114,37 +112,46 @@ export default function AuditScreen({ onComplete }) {
       const vectorToReduce = QUESTIONS[prevIndex].v;
       const valueToSubtract = history[history.length - 1];
 
-      // Update Scores by subtracting the last value
       setScores({
         ...scores,
         [vectorToReduce]: scores[vectorToReduce] - valueToSubtract
       });
 
-      // Update History by removing the last entry
       const newHistory = [...history];
       newHistory.pop();
       setHistory(newHistory);
-
-      // Go back one question
       setCurrent(prevIndex);
+    } else {
+      // Exit to home if on question 1
+      if(onExit) onExit();
     }
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* FLOATING TOGGLE */}
-      <TouchableOpacity style={styles.langToggle} onPress={() => setLang(lang === 'en' ? 'as' : 'en')}>
-        <Text style={styles.langToggleText}>{lang === 'en' ? 'অসমীয়া' : 'ENGLISH'}</Text>
-      </TouchableOpacity>
+      {/* HEADER CONTROLS */}
+      <View style={styles.topNav}>
+        <TouchableOpacity 
+          style={styles.homeBtn} 
+          onPress={() => onExit && onExit()}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
+          <MaterialCommunityIcons name="home" size={24} color={DEEP_BLUE} />
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={styles.langToggle} 
+          onPress={() => setLang(lang === 'en' ? 'as' : 'en')}
+        >
+          <Text style={styles.langToggleText}>{lang === 'en' ? 'অসমীয়া' : 'ENGLISH'}</Text>
+        </TouchableOpacity>
+      </View>
 
       <View style={styles.header}>
-        {/* BACK BUTTON */}
-        {current > 0 && (
-          <TouchableOpacity style={styles.backBtn} onPress={handleBack}>
-            <MaterialCommunityIcons name="arrow-left" size={20} color={MATTE_GOLD} />
-            <Text style={styles.backBtnText}>{t.back}</Text>
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity style={styles.backBtn} onPress={handleBack}>
+          <MaterialCommunityIcons name="arrow-left" size={20} color={MATTE_GOLD} />
+          <Text style={styles.backBtnText}>{t.back}</Text>
+        </TouchableOpacity>
 
         <Text style={styles.progressText}>{t.vector}: {QUESTIONS[current].v}</Text>
         <Text style={styles.stepText}>{t.step} {current + 1} / 36</Text>
@@ -153,39 +160,44 @@ export default function AuditScreen({ onComplete }) {
         </View>
       </View>
 
-      <View style={styles.qBox}>
-        <Text style={styles.qText}>{lang === 'en' ? QUESTIONS[current].en : QUESTIONS[current].as}</Text>
-        <View style={styles.options}>
-          {t.options.map((opt) => (
-            <TouchableOpacity 
-              key={opt.l} 
-              style={[styles.optBtn, { borderLeftColor: opt.color, borderLeftWidth: 4 }]} 
-              onPress={() => handleAnswer(opt.v)}
-            >
-              <View style={styles.btnContent}>
-                <MaterialCommunityIcons name={opt.icon} size={24} color={opt.color} />
-                <Text style={[styles.optLabel, { color: DEEP_BLUE }]}>{opt.l}</Text>
-              </View>
-            </TouchableOpacity>
-          ))}
+      <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+        <View style={styles.qBox}>
+          <Text style={styles.qText}>{lang === 'en' ? QUESTIONS[current].en : QUESTIONS[current].as}</Text>
+          <View style={styles.options}>
+            {t.options.map((opt) => (
+              <TouchableOpacity 
+                key={opt.l} 
+                style={[styles.optBtn, { borderLeftColor: opt.color, borderLeftWidth: 4 }]} 
+                onPress={() => handleAnswer(opt.v)}
+              >
+                <View style={styles.btnContent}>
+                  <MaterialCommunityIcons name={opt.icon} size={24} color={opt.color} />
+                  <Text style={[styles.optLabel, { color: DEEP_BLUE }]}>{opt.l}</Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F9F8F4' },
-  langToggle: { position: 'absolute', top: 50, right: 20, zIndex: 1000, backgroundColor: MATTE_GOLD, padding: 8, borderRadius: 20 },
+  topNav: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingTop: 10, height: 60 },
+  homeBtn: { backgroundColor: '#FFF', padding: 8, borderRadius: 20, elevation: 3, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 2 },
+  langToggle: { backgroundColor: MATTE_GOLD, paddingVertical: 8, paddingHorizontal: 12, borderRadius: 20 },
   langToggleText: { color: DEEP_BLUE, fontWeight: '900', fontSize: 10 },
-  header: { padding: 20, borderBottomWidth: 1, borderColor: '#EEE', alignItems: 'center', marginTop: 40 },
+  header: { padding: 20, borderBottomWidth: 1, borderColor: '#EEE', alignItems: 'center' },
   backBtn: { position: 'absolute', left: 20, top: 20, flexDirection: 'row', alignItems: 'center' },
   backBtnText: { color: MATTE_GOLD, fontSize: 12, fontWeight: 'bold', marginLeft: 5 },
   progressText: { color: MATTE_GOLD, fontWeight: '900', fontSize: 11, letterSpacing: 1.5 },
   stepText: { color: '#999', fontSize: 10, marginTop: 4, fontWeight: '600' },
   progressBar: { height: 4, width: '100%', backgroundColor: '#EEE', marginTop: 15, borderRadius: 2, overflow: 'hidden' },
   progressFill: { height: '100%', backgroundColor: '#004D40' },
-  qBox: { flex: 1, justifyContent: 'center', padding: 30 },
+  scrollContainer: { flexGrow: 1, justifyContent: 'center' },
+  qBox: { padding: 30 },
   qText: { fontSize: 20, fontWeight: '800', color: DEEP_BLUE, marginBottom: 40, textAlign: 'center', lineHeight: 28 },
   options: { width: '100%' },
   optBtn: { backgroundColor: '#FFF', padding: 15, borderRadius: 12, marginBottom: 10, borderWidth: 1, borderColor: '#E0E0E0' },

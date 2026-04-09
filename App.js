@@ -1,25 +1,27 @@
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native';
 
-// IMPORT YOUR THREE SCREENS
 import HomeScreen from './screens/HomeScreen';
 import AuditScreen from './screens/AuditScreen';
 import ResultScreen from './screens/ResultScreen';
 
 export default function App() {
-  const [view, setView] = useState('HOME'); // HOME, AUDIT, RESULT
+  const [view, setView] = useState('HOME');
   const [auditResults, setAuditResults] = useState(null);
+  
+  // 1. SET ASSAMESE ('as') AS THE GLOBAL INITIAL STATE
+  const [lang, setLang] = useState('as'); 
 
-  // 1. Logic to start Audit from Home
+  // 2. Logic to toggle between English and Assamese
+  const toggleLang = () => setLang(prev => (prev === 'en' ? 'as' : 'en'));
+
   const startAudit = () => setView('AUDIT');
-
-  // 2. Logic to handle results coming from AuditScreen
+  
   const finishAudit = (scores) => {
     setAuditResults(scores);
     setView('RESULT');
   };
 
-  // 3. Logic to restart from ResultScreen
   const resetApp = () => {
     setAuditResults(null);
     setView('HOME');
@@ -28,17 +30,32 @@ export default function App() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#FFF' }}>
       
-      {/* NAVIGATION LOGIC */}
+      {/* HOME SCREEN */}
       {view === 'HOME' && (
-        <HomeScreen onStart={startAudit} />
+        <HomeScreen 
+          onStart={startAudit} 
+          lang={lang} 
+          setLang={toggleLang} 
+        />
       )}
 
+      {/* AUDIT SCREEN */}
       {view === 'AUDIT' && (
-        <AuditScreen onComplete={finishAudit} />
+        <AuditScreen 
+          onComplete={finishAudit} 
+          onExit={resetApp} 
+          lang={lang} 
+          setLang={toggleLang} 
+        />
       )}
 
+      {/* RESULT SCREEN */}
       {view === 'RESULT' && (
-        <ResultScreen scores={auditResults} onReset={resetApp} />
+        <ResultScreen 
+          scores={auditResults} 
+          onReset={resetApp} 
+          lang={lang} 
+        />
       )}
 
     </SafeAreaView>
