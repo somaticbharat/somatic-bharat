@@ -106,14 +106,20 @@ export default function AuditScreen({ onComplete, onExit }) {
       setScores(newScores);
       setCurrent(current + 1);
     } else {
-      // Save audit submission directly to Firestore upon completion
+      // Check if db is loaded before making the call
+      if (!db) {
+        console.error("Firebase DB failed to load or is undefined.");
+        return;
+      }
+
       try {
         await addDoc(collection(db, "audit_submissions"), {
           scores: newScores,
           completedAt: serverTimestamp(),
           language: lang,
-          platform: 'mobile'
+          platform: 'web'
         });
+        console.log("Audit successfully submitted to Firestore!");
       } catch (e) {
         console.error("Failed to save audit results:", e);
       }
@@ -219,4 +225,4 @@ const styles = StyleSheet.create({
   optBtn: { backgroundColor: '#FFF', padding: 15, borderRadius: 12, marginBottom: 10, borderWidth: 1, borderColor: '#E0E0E0' },
   btnContent: { flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' },
   optLabel: { fontWeight: '900', fontSize: 12, marginLeft: 15, letterSpacing: 1 }
-}); 
+});
