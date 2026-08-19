@@ -1,4 +1,4 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -10,5 +10,12 @@ const firebaseConfig = {
   appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID
 };
 
-const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+// Initialize Firebase App safely without re-initializing on hot reloads
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+
+// Initialize Firestore
+const db = getFirestore(app);
+
+// Export db as default and named export to prevent import mismatch errors
+export { db };
+export default db;
