@@ -2,10 +2,6 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, ScrollView } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 
-// Firebase Imports
-import { db } from './firebase'; 
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-
 const DEEP_BLUE = '#002147';
 const MATTE_GOLD = '#C5A059';
 
@@ -78,7 +74,7 @@ const QUESTIONS = [
   { v: 'STRUCTURAL', en: "Are you experiencing a profound drop in personal vitality, physical drive, or libido, which frequently tracks alongside chronic, system-wide nervous system exhaustion?", as: "স্নায়ুতন্ত্ৰৰ ক্ৰনিক ভাগৰৰ বাবে আপোনাৰ শাৰীৰিক শক্তি, উৎসাহ বা যৌন আগ্ৰহ তীব্ৰভাৱে হ্ৰাস পাইছে নেকি?" },
 
   // HUMORAL VECTOR
-  { v: 'HUMORAL', en: "Do you struggle with persistent overthinking or racing mental loops, especially at night, that physically prevent your body and muscles from settling down?", as: "আপুনি অবিৰাম অতি-চিন্তা বা অনবৰতে মনলৈ অহা চিন্তাত ভোগে নেকি, বিশেষকৈ ৰাতিৰ সময়ত, যিয়ে আপোনাৰ শৰীৰ আৰু পেশীবোৰক শান্ত হ'বলৈ নিদিয়ে?" },
+  { v: 'HUMORAL', en: "Do you struggle with persistent overthinking or racing mental loops, especially at night, that physically prevent your body and muscles from settling down?", as: "আপুনি অবিৰাম অতি-চিন্তা বা অনবৰতে মনলê অহা চিন্তাত ভোগে নেকি, বিশেষকৈ ৰাতিৰ সময়ত, যিয়ে আপোনাৰ শৰীৰ আৰু পেশীবোৰক শান্ত হ'বলৈ নিদিয়ে?" },
   { v: 'HUMORAL', en: "Do you notice your breath becomes shallow, rapid, or completely held in your chest when managing normal, daily intellectual workloads?", as: "দৈনন্দিন কাম-কাজৰ সময়ত আপোনাৰ উশাহ-নিশাহ সৰু, দ্ৰুত বা ছাত আৱদ্ধ হৈ পৰা যেন অনুভৱ কৰে নেকি?" },
   { v: 'HUMORAL', en: "Does your physical recovery time after mild daily tasks or light home errands take days rather than hours?", as: "সামান্য ঘৰুৱা কাম বা দৈনিক পৰিশ্ৰমৰ পাছত সুস্থ হ’বলৈ আপোনাক কেইবা ঘণ্টাৰ পৰিৱৰ্তে কেইবাদিনো লাগে নেকি?" },
   { v: 'HUMORAL', en: "Do your muscles consistently feel cool or numb in certain regions, indicating local circulatory stagnation or high sympathetic constriction?", as: "আপোনাৰ শৰীৰৰ কিছুমান অংশৰ পেশী সদায় ঠাণ্ডা বা অৱশ যেন লাগে নেকি, যিয়ে ৰক্ত সঞ্চালনৰ মন্থৰতা বুজায়?" },
@@ -86,9 +82,8 @@ const QUESTIONS = [
   { v: 'HUMORAL', en: "Do you feel a profound baseline loss of physical restoration, where your body feels as though it is constantly running on empty?", as: "আপোনাৰ শৰীৰটো সদায় শক্তিহীন হৈ থকা যেন লাগে নেকি, যেন কোনো পুনৰুদ্ধাৰেই শৰীৰটোক শক্তি দিব পৰা নাই?" }
 ];
 
-export default function AuditScreen({ onComplete, onExit }) {
+export default function AuditScreen({ onComplete, onExit, lang, setLang }) {
   const [current, setCurrent] = useState(0);
-  const [lang, setLang] = useState('en'); 
   const [history, setHistory] = useState([]); 
   const [scores, setScores] = useState({ 
     MECHANICAL: 0, ANCESTRAL: 0, NEURAL: 0, 
@@ -97,7 +92,7 @@ export default function AuditScreen({ onComplete, onExit }) {
 
   const t = TRANSLATIONS[lang];
 
-  const handleAnswer = async (val) => {
+  const handleAnswer = (val) => {
     const vector = QUESTIONS[current].v;
     const newScores = { ...scores, [vector]: scores[vector] + val };
     setHistory([...history, val]);
@@ -106,24 +101,7 @@ export default function AuditScreen({ onComplete, onExit }) {
       setScores(newScores);
       setCurrent(current + 1);
     } else {
-      // Check if db is loaded before making the call
-      if (!db) {
-        console.error("Firebase DB failed to load or is undefined.");
-        return;
-      }
-
-      try {
-        await addDoc(collection(db, "audit_submissions"), {
-          scores: newScores,
-          completedAt: serverTimestamp(),
-          language: lang,
-          platform: 'web'
-        });
-        console.log("Audit successfully submitted to Firestore!");
-      } catch (e) {
-        console.error("Failed to save audit results:", e);
-      }
-
+      // Pass final scores to parent App.js to display the Result Screen locally first
       onComplete(newScores); 
     }
   };
@@ -144,7 +122,6 @@ export default function AuditScreen({ onComplete, onExit }) {
       setHistory(newHistory);
       setCurrent(prevIndex);
     } else {
-      // Exit to home if on question 1
       if (onExit) onExit();
     }
   };
@@ -163,7 +140,7 @@ export default function AuditScreen({ onComplete, onExit }) {
 
         <TouchableOpacity 
           style={styles.langToggle} 
-          onPress={() => setLang(lang === 'en' ? 'as' : 'en')}
+          onPress={setLang}
         >
           <Text style={styles.langToggleText}>{lang === 'en' ? 'অসমীয়া' : 'ENGLISH'}</Text>
         </TouchableOpacity>
