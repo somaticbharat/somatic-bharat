@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, ScrollView } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 
+// Firebase Imports
+import { db } from './firebase'; 
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+
 const DEEP_BLUE = '#002147';
 const MATTE_GOLD = '#C5A059';
 
@@ -42,7 +46,7 @@ const QUESTIONS = [
   { v: 'MECHANICAL', en: "Does physical rest fail to resolve the stiffness you feel in the morning?", as: "শাৰীৰিক জিৰণিৰ পাছতো আপুনি ৰাতিপুৱা অনুভৱ কৰা জঠৰতা আঁতৰি নাযায় নেকি?" },
   
   // ANCESTRAL VECTOR
-  { v: 'ANCESTRAL', en: "Do you suffer from health patterns similar to those of your parents or grandparents?", as: "আপুনি আপোনাৰ পিতৃ-মাতৃ বা ককা-আইতাৰ দৰে একে ধৰণৰ স্বাস্থ্যজনিত সমস্যাত ভুগিছে নেকি?" },
+  { v: 'ANCESTRAL', en: "Do you actually suffer from health patterns similar to those of your parents or grandparents?", as: "আপুনি আপোনাৰ পিতৃ-মাতৃ বা ককা-আইতাৰ দৰে একে ধৰণৰ স্বাস্থ্যজনিত সমস্যাত ভুগিছে নেকি?" },
   { v: 'ANCESTRAL', en: "Do you experience 'unearned' anxiety—anxiety without a direct current trigger?", as: "আপুনি কোনো প্ৰত্যক্ষ কাৰণ নোহোৱাকৈয়ে এক গভীৰ উৎকণ্ঠা বা চিন্তা অনুভৱ কৰে নেকি?" },
   { v: 'ANCESTRAL', en: "Do you feel a deep-seated 'survivalist' urge even when you are secure?", as: "সুৰক্ষিত থকাৰ পাছতো আপুনি সদায় এক অস্তিত্ব ৰক্ষাৰ মানসিক চাপত থাকে নেকি?" },
   { v: 'ANCESTRAL', en: "Are there recurring 'anniversary' symptoms (getting sick same time every year)?", as: "প্ৰতি বছৰে একে সময়তে আপুনি পুনৰাবৃত্তিমূলক ৰোগৰ লক্ষণত ভোগে নেকি?" },
@@ -61,7 +65,7 @@ const QUESTIONS = [
   { v: 'ATMOSPHERIC', en: "Does your pain increase significantly with changes in weather or pressure?", as: "বতৰ বা বায়ুমণ্ডলৰ চাপ সলনি হ'লে আপোনাৰ বিষ বৃদ্ধি পায় নেকি?" },
   { v: 'ATMOSPHERIC', en: "Do you feel physically drained after being in crowded or high-EMF environments?", as: "ভিৰ বা বৈদ্যুতিক-চুম্বকীয় ক্ষেত্ৰ (EMF) থকা পৰিৱেশত আপুনি শাৰীৰিকভাৱে ভাগৰুৱা অনুভৱ কৰে নেকি?" },
   { v: 'ATMOSPHERIC', en: "Are you prone to 'sensory overwhelm' in shopping malls or busy offices?", as: "শ্বপিং মল বা ব্যস্ত অফিচত আপুনি ইন্দ্ৰিয়গতভাৱে বিমোৰত পৰে নেকি?" },
-  { v: 'ATMOSPHERIC', en: "Do you feel significantly better when you are away from your primary city?", as: "আপুনি নিজৰ চহৰৰ পৰা দূৰত থাকিলে শাৰীৰিকভাৱে যথেষ্ট ভাল অনুভৱ কৰে নেকি?" },
+  { v: 'ATMOSPHERIC', en: "Do you feel significantly better when you are away from your primary city?", as: "আপুনি নিজৰ চহৰৰ পৰা দূৰত থাকলে শাৰীৰিকভাৱে যথেষ্ট ভাল অনুভৱ কৰে নেকি?" },
   { v: 'ATMOSPHERIC', en: "Does 'blue light' from screens trigger immediate headaches or eye strain?", as: "স্ক্ৰীণৰ 'ব্লু লাইট'ৰ ফলত আপোনাৰ লগে লগে মূৰৰ বিষ বা চকুৰ পানী ওলায় নেকি?" },
   { v: 'ATMOSPHERIC', en: "Are you highly sensitive to synthetic fragrances or cleaning chemicals?", as: "আপুনি কৃত্ৰিম সুগন্ধি বা চাফ-চিকুণৰ ৰাসায়নিক পদাৰ্থৰ প্ৰতি অতি সংবেদনশীল নেকি?" },
 
@@ -93,7 +97,7 @@ export default function AuditScreen({ onComplete, onExit }) {
 
   const t = TRANSLATIONS[lang];
 
-  const handleAnswer = (val) => {
+  const handleAnswer = async (val) => {
     const vector = QUESTIONS[current].v;
     const newScores = { ...scores, [vector]: scores[vector] + val };
     setHistory([...history, val]);
@@ -102,6 +106,18 @@ export default function AuditScreen({ onComplete, onExit }) {
       setScores(newScores);
       setCurrent(current + 1);
     } else {
+      // Save audit submission directly to Firestore upon completion
+      try {
+        await addDoc(collection(db, "audit_submissions"), {
+          scores: newScores,
+          completedAt: serverTimestamp(),
+          language: lang,
+          platform: 'mobile'
+        });
+      } catch (e) {
+        console.error("Failed to save audit results:", e);
+      }
+
       onComplete(newScores); 
     }
   };
@@ -123,7 +139,7 @@ export default function AuditScreen({ onComplete, onExit }) {
       setCurrent(prevIndex);
     } else {
       // Exit to home if on question 1
-      if(onExit) onExit();
+      if (onExit) onExit();
     }
   };
 
@@ -203,4 +219,4 @@ const styles = StyleSheet.create({
   optBtn: { backgroundColor: '#FFF', padding: 15, borderRadius: 12, marginBottom: 10, borderWidth: 1, borderColor: '#E0E0E0' },
   btnContent: { flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' },
   optLabel: { fontWeight: '900', fontSize: 12, marginLeft: 15, letterSpacing: 1 }
-});
+}); 

@@ -26,7 +26,7 @@ const TRANSLATIONS = {
     online: "ONLINE CLINICAL RESET",
     onlineSub: "Global Tele-Somatic Session",
     community: "JOIN MASTERCLASS COMMUNITY",
-    communitySub: "Priority Access to Somatic Bharat App",
+    communitySub: "Priority Access to Shatkona Life App",
     retake: "RETAKE AUDIT"
   },
   as: {

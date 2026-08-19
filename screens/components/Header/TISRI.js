@@ -10,19 +10,19 @@ const translations = {
         title: "Fascia: The Body's Memory Bank",
         text: "Research on how the fascial system stores emotional trauma and stress as physical tension.",
         link: "Read: Fascia as a Sensory Organ →",
-        url: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8364443/'
+        url: 'https://www.ncbi.nlm.nih.gov/books/NBK493232/'
       },
       {
         title: "The Biology of Chronic Inflammation",
         text: "The role of NF-kB signaling pathways in widespread pain and neuro-inflammation in Fibromyalgia.",
         link: "Read: NF-kB & Central Sensitization →",
-        url: 'https://pubmed.ncbi.nlm.nih.gov/33148419/'
+        url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4683208/'
       },
       {
         title: "Ancestral Trauma & Epigenetics",
         text: "How generational stress impacts the nervous system’s pain threshold (Mission 2047 Vision).",
         link: "Read: Transgenerational Stress Legacy →",
-        url: 'https://www.nature.com/articles/s41386-018-0096-9'
+        url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6322092/'
       }
     ]
   },
@@ -34,19 +34,19 @@ const translations = {
         title: "ফেচিয়া: শৰীৰৰ মেম’ৰী বেংক",
         text: "আৱেগিক আঘাত আৰু মানসিক চাপে কেনেকৈ ফেচিয়েলত শাৰীৰিক উত্তেজনা হিচাপে জমা হয় তাৰ ওপৰত গৱেষণা।",
         link: "পঢ়ক: সংবেদনশীল অংগ হিচাপে ফেচিয়া →",
-        url: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8364443/'
+        url: 'https://www.ncbi.nlm.nih.gov/books/NBK493232/'
       },
       {
         title: "দীৰ্ঘদিনীয়া প্ৰদাহৰ জীৱবিজ্ঞান",
         text: "ফাইব্ৰ’মায়েলজিয়াত বিষ আৰু নিউৰ’-প্ৰদাহৰ ক্ষেত্ৰত NF-kB সংকেত পথৰ ভূমিকা।",
         link: "পঢ়ক: NF-kB আৰু চেণ্ট্ৰেল চেন্সিটাইজেচন →",
-        url: 'https://pubmed.ncbi.nlm.nih.gov/33148419/'
+        url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4683208/'
       },
       {
         title: "পূৰ্বপুৰুষীয় আঘাত আৰু এপিজেনেটিক্স",
         text: "বংশানুক্ৰমিক মানসিক চাপে কেনেকৈ স্নায়ুতন্ত্ৰৰ বিষ সহনশীলতাক প্ৰভাৱিত কৰে (মিছন ২০৪৭ ভিজন)।",
         link: "পঢ়ক: বংশানুক্ৰমিক মানসিক চাপৰ উত্তৰাধিকাৰ →",
-        url: 'https://www.nature.com/articles/s41386-018-0096-9'
+        url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6322092/'
       }
     ]
   }

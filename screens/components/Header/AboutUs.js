@@ -2,48 +2,46 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 
 const translations = {
-  // Swapped the order so 'as' is the primary focus
   as: {
     visionary: "প্ৰতিষ্ঠাপক",
-    founderName: "মনাস প্ৰতিম দাস (BPT, LLB, RYT 500)",
-    founderBody: "১২ বছৰৰো অধিক ক্লিনিকেল অভিজ্ঞতাৰ সৈতে, আমাৰ প্ৰতিষ্ঠাপকে ফিজিঅ’থেৰাপী, আইনী ওকালতি আৰু প্ৰাচীন ছ’মেটিক জ্ঞানৰ মাজত এক যোগসূত্ৰ স্থাপন কৰিছে। তেখেতৰ যাত্ৰাই 'Uncut' সংযোগ আৱিষ্কাৰ কৰিছিল—য’ত সমাধান নোহোৱা অৱচেতন মনেই শাৰীৰিক যন্ত্ৰণা হিচাপে প্ৰকাশ পায়।",
-    shatkonaTitle: "ষটকোণ ৬-ভেক্টৰ মডেল",
-    shatkonaDesc: "'DNA অডিট'ৰ বাবে আমাৰ স্বকীয় ডায়েগনষ্টিক ফ্ৰেমৱৰ্ক। আমি ছয়টা গুৰুত্বপূৰ্ণ মাত্ৰাৰ জৰিয়তে স্বাস্থ্যৰ মেপিং কৰোঁ:",
+    founderName: "ডাঃ এম. পি. দাস (PT, LLB, RYT 500)",
+    founderBody: "১২ বছৰৰো অধিক ক্লিনিকেল অভিজ্ঞতাৰ সৈতে (NIMHANS/Apollo), আমাৰ প্ৰতিষ্ঠাপকে ফিজিঅ’থেৰাপী, আইনী ওকালতি আৰু ছ’মেটিক জ্ঞানৰ মাজত এক নতুন যোগসূত্ৰ স্থাপন কৰিছে। তেখেতৰ যাত্ৰাই 'Uncut' সংযোগ আৱিষ্কাৰ কৰিছিল—য’ত সমাধান নোহোৱা অৱচেতন মনেই শৰীৰত 'অদৃশ্য জুই' বা দীৰ্ঘদিনীয়া বিষ হিচাপে প্ৰকাশ পায়।",
+    shatkonaTitle: "ষটকোণ ৬-ভেক্টৰ মেপিং",
+    shatkonaDesc: "আমাৰ স্বকীয় ডায়েগনষ্টিক ফ্ৰেমৱৰ্ক। আমি আপোনাৰ বিষৰ উৎস তলত দিয়া ছয়টা গুৰুত্বপূৰ্ণ ভেক্টৰৰ জৰিয়তে মেপিং কৰোঁ:",
     vectors: [
-      "১. পূৰ্বপুৰুষীয় (এপিজেনেটিক্স)",
-      "২. পাৰিপাৰ্শ্বিক (চাপ)",
-      "৩. নিউৰ’-বায়’লজিকেল (NF-kB)",
-      "৪. ছ’মেটিক মেম’ৰী (ফেচিয়া)",
-      "৫. ক’গনিটিভ (মানসিকতা)",
-      "৬. কাৰ্যক্ষম (গতিবিধি)"
+      { n: "১. যান্ত্ৰিক (Mechanical)", d: "গাঁঠি আৰু কলাৰ চাপ" },
+      { n: "২. পূৰ্বপুৰুষীয় (Ancestral)", d: "এপিজেনেটিক্সৰ প্ৰভাৱ" },
+      { n: "৩. স্নায়ৱিক (Neural)", d: "স্নায়ুতন্ত্ৰৰ অতি-সক্ৰিয়তা" },
+      { n: "৪. পাৰিপাৰ্শ্বিক (Atmospheric)", d: "পৰিৱেশগত চাপ" },
+      { n: "৫. গাথঁনিগত (Structural)", d: "ফেচিয়েল এলাইনমেন্ট" },
+      { n: "৬. হিউমৰেল (Humoral)", d: "প্ৰণালীবদ্ধ বিষাক্ততা" }
     ],
-    missionTitle: "মিছন ২০৪৭",
-    missionBody: "আমাৰ ফাউণ্ডেশ্যন এখন 'যন্ত্ৰণামুক্ত আৰু স্থিতিস্থাপক ভাৰত' গঢ়ি তুলিবলৈ সংকল্পবদ্ধ। ২০৪৭ চনৰ ভিতৰত আমি প্ৰতিখন বিদ্যালয় আৰু কৰ্প’ৰেট কাৰ্যালয়ত ছ’মেটিক শিক্ষা কাৰ্যকৰী কৰাৰ লক্ষ্য ৰাখিছোঁ, যাতে ৰাষ্ট্ৰীয় কৰ্মশক্তিয়ে কেৱল উৎপাদনশীল হোৱাই নহয়, বৰঞ্চ জৈৱিকভাৱে নিয়ন্ত্রিত আৰু ট্ৰমা-ইনফৰ্মড হয়।",
-    foundationTitle: "ছ’মেটিক ভাৰত ফাউণ্ডেশ্যন",
-    foundationBody: "এক অলাভজনক সংস্থা যি সামাজিক গৱেষণা (TISRI) আৰু বৃত্তিমূলক শিক্ষা (SIBS Academy) ৰ বাবে উৎসৰ্গিত। আমি বিজ্ঞান, সংস্কৃতি আৰু সহানুভূতিৰ জৰিয়তে 'অসমাধানিত বিষৰ মহামাৰী' দূৰ কৰিবলৈ কাম কৰি আছোঁ।"
+    missionTitle: "মিছন ২০৪৭: এক সুদৃঢ় স্নায়ৱিক ভাৰত",
+    missionBody: "আমাৰ লক্ষ্য এখন 'যন্ত্ৰণামুক্ত আৰু স্নায়ৱিকভাৱে সুদৃঢ় ভাৰত' গঢ়ি তোলা। ২০৪৭ চনৰ ভিতৰত আমি প্ৰতিখন বিদ্যালয় আৰু কৰ্প’ৰেট কাৰ্যালয়ত ছ’মেটিক শিক্ষা (Somatic Literacy) কাৰ্যকৰী কৰিব বিচাৰোঁ, যাতে ৰাষ্ট্ৰীয় কৰ্মশক্তিয়ে কেৱল উৎপাদনশীল হোৱাই নহয়, বৰঞ্চ জৈৱিকভাৱে নিয়ন্ত্রিত আৰু ট্ৰমা-ইনফৰ্মড হয়।",
+    foundationTitle: "ছ’মেটিক ভাৰত MOVEMENT",
+    foundationBody: "এক অলাভজনক সংস্থা যি সামাজিক গৱেষণা (TISRI) আৰু বৃত্তিমূলক শিক্ষা (SIBS Academy) ৰ বাবে উৎসৰ্গিত। আমি বিজ্ঞান, সংস্কৃতি আৰু সহানুভূতিৰ জৰিয়তে 'অসমাধানিত বিষৰ মহামাৰী' দূৰ কৰিবলৈ সংকল্পবদ্ধ।"
   },
   en: {
     visionary: "The Visionary",
-    founderName: "Manash Protim Das (BPT, LLB, RYT 500)",
-    founderBody: "With over 12 years of clinical experience, our founder has bridged the gap between physical therapy, legal advocacy, and ancient somatic wisdom. His journey led to the discovery of the 'Uncut' connection—where unresolved subconscious patterns manifest as physical pain.",
-    shatkonaTitle: "The Shatkona 6-Vector Model",
-    shatkonaDesc: "Our proprietary diagnostic framework for the 'DNA Audit.' We map health across six vital dimensions:",
+    founderName: "Dr. MP Das (PT, LLB, RYT 500)",
+    founderBody: "With over 12 years of clinical exposure (NIMHANS/Apollo), our founder has bridged the gap between physical therapy, legal advocacy, and somatic wisdom. His journey led to the discovery of the 'Uncut' connection—where unresolved subconscious patterns manifest as 'Invisible Fire' or chronic physical pain.",
+    shatkonaTitle: "Shatkona 6-Vector Model",
+    shatkonaDesc: "Our proprietary diagnostic framework for the 'DNA Audit.' We map the roots of your pain across six vital dimensions:",
     vectors: [
-      "1. Ancestral (Epigenetics)",
-      "2. Environmental (Stressors)",
-      "3. Neuro-Biological (NF-kB)",
-      "4. Somatic Memory (Fascia)",
-      "5. Cognitive (Mindset)",
-      "6. Functional (Movement)"
+      { n: "1. Mechanical", d: "Joint & Tissue Load" },
+      { n: "2. Ancestral", d: "Epigenetic Imprints" },
+      { n: "3. Neural", d: "Nervous Overdrive" },
+      { n: "4. Atmospheric", d: "Environmental Stress" },
+      { n: "5. Structural", d: "Fascial Alignment" },
+      { n: "6. Humoral", d: "Systemic Toxicity" }
     ],
-    missionTitle: "Mission 2047",
-    missionBody: "Our foundation is committed to building a 'Pain-Free & Resilient Bharat.' By 2047, we aim to have implemented somatic literacy in every school and corporate office, ensuring that the national workforce is not just productive, but biologically regulated and trauma-informed.",
-    foundationTitle: "Somatic Bharat Foundation",
+    missionTitle: "Mission 2047: Neuro-Resilient Bharat",
+    missionBody: "We are committed to building a 'Pain-Free & Neuro-Resilient India.' By 2047, we aim to implement somatic literacy across every school and corporate space, ensuring a national workforce that is not just productive, but biologically regulated and trauma-informed.",
+    foundationTitle: "Somatic Bharat Movement",
     foundationBody: "A non-profit entity dedicated to Social Research (TISRI) and Vocational Education (SIBS Academy). We exist to solve the 'Unresolved Pain Epidemic' through science, culture, and compassion."
   }
 };
 
-// Defaulting lang to 'as'
 export const AboutUs = ({ lang = 'as' }) => {
   const t = translations[lang] || translations.as;
 
@@ -64,7 +62,8 @@ export const AboutUs = ({ lang = 'as' }) => {
         <View style={styles.vectorGrid}>
           {t.vectors.map((vector, index) => (
             <View key={index} style={styles.vectorItem}>
-              <Text style={styles.vectorText}>{vector}</Text>
+              <Text style={styles.vectorName}>{vector.n}</Text>
+              <Text style={styles.vectorDesc}>{vector.d}</Text>
             </View>
           ))}
         </View>
@@ -76,7 +75,7 @@ export const AboutUs = ({ lang = 'as' }) => {
         <Text style={[styles.body, { color: '#FFF' }]}>{t.missionBody}</Text>
       </View>
 
-      {/* --- THE SOMATIC BHARAT FOUNDATION --- */}
+      {/* --- THE SOMATIC BHARAT MOVEMENT --- */}
       <View style={styles.foundationSection}>
         <Text style={styles.header}>{t.foundationTitle}</Text>
         <Text style={styles.body}>{t.foundationBody}</Text>
@@ -86,11 +85,11 @@ export const AboutUs = ({ lang = 'as' }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { paddingVertical: 10 },
+  container: { paddingVertical: 10, paddingHorizontal: 15 },
   section: { marginBottom: 25 },
   header: { fontSize: 22, fontWeight: 'bold', color: '#002147', marginBottom: 8 },
   subHeader: { fontSize: 14, color: '#C5A059', fontWeight: '700', marginBottom: 10 },
-  body: { fontSize: 15, color: '#333', lineHeight: 28, textAlign: 'justify' }, // Increased lineHeight slightly for Assamese script clarity
+  body: { fontSize: 15, color: '#333', lineHeight: 26, textAlign: 'justify' }, 
   
   shatkonaBox: { 
     backgroundColor: '#F9F8F4', 
@@ -107,14 +106,16 @@ const styles = StyleSheet.create({
   vectorItem: { 
     width: '48%', 
     backgroundColor: '#FFF', 
-    padding: 10, 
+    padding: 8, 
     borderRadius: 8, 
     marginBottom: 10,
     elevation: 2,
     borderWidth: 0.5,
-    borderColor: '#EEE'
+    borderColor: '#EEE',
+    alignItems: 'center'
   },
-  vectorText: { fontSize: 11, fontWeight: 'bold', color: '#004D40', textAlign: 'center' },
+  vectorName: { fontSize: 10, fontWeight: 'bold', color: '#004D40', textAlign: 'center' },
+  vectorDesc: { fontSize: 9, color: '#777', textAlign: 'center', marginTop: 2 },
   
   missionSection: { 
     backgroundColor: '#002147', 

@@ -35,12 +35,12 @@ export const Testimonials = ({ lang }) => {
       {/* --- PERSONA 1 --- */}
       <View style={styles.testimonialCard}>
         <Text style={styles.quote}>
-          "I lived with Fibromyalgia for 7 years. Every doctor told me it was 'Monor Dharona' (imaginary). 
+          "I lived with Fibromyalgia for 7 years. Every doctor told me it was imaginary. 
           The DNA Audit at FasciaMax was the first time someone mapped my pain to my past stress 
           and my fascia. I feel like I've been given a second life."
         </Text>
         <View style={styles.footer}>
-          <Text style={styles.author}>— Ananya B., Guwahati</Text>
+          <Text style={styles.author}>— Ela Talukdar., Guwahati</Text>
           <Text style={styles.tag}>{t.tags.recovery}</Text>
         </View>
       </View>
@@ -66,7 +66,7 @@ export const Testimonials = ({ lang }) => {
           the 6-Vector model. This is the future of Bharat's healthcare."
         </Text>
         <View style={styles.footer}>
-          <Text style={styles.author}>— Dr. P. Gogoi (MPT), SIBS Alumnus</Text>
+          <Text style={styles.author}>— Dr. R Ghotage (MPT), SIBS Alumnus</Text>
           <Text style={styles.tag}>{t.tags.edu}</Text>
         </View>
       </View>

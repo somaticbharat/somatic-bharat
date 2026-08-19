@@ -5,7 +5,7 @@ const translations = {
   en: {
     header: "Join the Somatic Movement",
     subHeader: "Building the Future of Bharat's Health Literacy",
-    introText: "At Somatic Bharat Foundation, we don't just hire employees; we recruit pioneers. Whether you are a clinician, a researcher, or a technologist, your work here contributes directly to Mission 2047.",
+    introText: "At Shatkona Foundation, we don't just hire employees; we recruit pioneers. Whether you are a clinician, a researcher, or a technologist, your work here contributes directly to Mission 2047.",
     roles: [
       {
         badge: "Clinical",
