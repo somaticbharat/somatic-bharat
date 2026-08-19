@@ -18,15 +18,24 @@ const TRANSLATIONS = {
     calculating: "CALCULATING SOMATIC LOAD...",
     systemicLoad: "SYSTEMIC LOAD",
     prescriptionTitle: "VITALITY PRESCRIPTION",
-    highLoad: "High systemic load detected. Your 'NF-kB Fire' requires a clinical reset. We recommend a focused 1-on-1 session to restore your neural baseline.",
-    modLoad: "Moderate tension patterns identified. Recalibration through Vagal Toning and guided fascia release will optimize your recovery.",
-    restoreTitle: "RESTORE YOUR PRANA",
-    inPerson: "FASCIAMAX STUDIO (IN-PERSON)",
+    
+    // High Load Translations
+    highLoad: "High systemic load detected. Your somatic system requires a clinical reset. We recommend a 1-on-1 consultation or studio visit to restore your baseline.",
+    restoreTitleHigh: "RECOMMENDED CLINICAL CARE",
+    teleconsultBtn: "SCHEDULE TELECONSULTATION",
+    teleconsultSub: "1-on-1 Online Clinical Reset via Shatkona Life",
+    inPersonTitle: "SHATKONA CENTER(Tanman Physiotherapy Clinic) (IN-PERSON)",
     address: "#43, Rudrapur Bylane, Bhetapara, Guwahati",
-    online: "ONLINE CLINICAL RESET",
-    onlineSub: "Global Tele-Somatic Session",
+
+    // Moderate / Low Load Translations
+    modLoad: "Moderate to low tension patterns identified. You are a great candidate for self-guided daily vagal toning and guided fascia maintenance.",
+    restoreTitleMod: "BUILD YOUR DAILY PRACTICE",
+    waitlistBtn: "JOIN APP LAUNCH WAITLIST",
+    waitlistSub: "Get Priority Access to Shatkona Life App & Masterclasses",
+
+    // Community / Retake
     community: "JOIN MASTERCLASS COMMUNITY",
-    communitySub: "Priority Access to Shatkona Life App",
+    communitySub: "Connect with our Somatic Wellness Network",
     retake: "RETAKE AUDIT"
   },
   as: {
@@ -34,15 +43,24 @@ const TRANSLATIONS = {
     calculating: "ছ’মেটিক লোড গণনা কৰা হৈছে...",
     systemicLoad: "প্ৰণালীবদ্ধ বোজা (LOAD)",
     prescriptionTitle: "ভাইটেলিটি প্ৰেছক্ৰিপচন",
-    highLoad: "উচ্চ প্ৰণালীবদ্ধ বোজা ধৰা পৰিছে। আপোনাৰ 'NF-kB Fire' নিৰ্বাপিত কৰিবলৈ ক্লিনিকেল ৰিছেটৰ প্ৰয়োজন। নিউৰেল বেচলাইন পুনৰুদ্ধাৰৰ বাবে আমি ১-অন-১ চেছনৰ পৰামৰ্শ দিওঁ।",
-    modLoad: "মধ্যমীয়া উত্তেজনাৰ আৰ্হি চিনাক্ত কৰা হৈছে। ভেগাল টোনিং আৰু গাইডেড ফেচিয়া ৰিলিজৰ জৰিয়তে ৰিকভাৰী উন্নত কৰিব পৰা যাব।",
-    restoreTitle: "প্ৰাণ শক্তি পুনৰুদ্ধাৰ কৰক",
-    inPerson: "ফেচিয়ামাক্স ষ্টুডিঅ’ (শাৰীৰিক উপস্থিতি)",
+    
+    // High Load Translations
+    highLoad: "উচ্চ প্ৰণালীবদ্ধ বোজা ধৰা পৰিছে। আপোনাৰ নিউৰেল বেচলাইন পুনৰুদ্ধাৰৰ বাবে ক্লিনিকেল ৰিছেট আৰু ১-অন-১ পৰামৰ্শৰ প্ৰয়োজন।",
+    restoreTitleHigh: "পৰামৰ্শিত ক্লিনিকেল সেৱা",
+    teleconsultBtn: "অনলাইন টেলি-কনচাল্টেশ্যন",
+    teleconsultSub: "ছ’মেটিক লাইফৰ জৰিয়তে ১-অন-১ চেছন বুক কৰক",
+    inPersonTitle: "ষটকোন কেন্দ্ৰ’(তনমন ফিজিঅ’থেৰাপী ক্লিনিক) (শাৰীৰিক উপস্থিতি)",
     address: "গৃহ নং ৪৩, ৰুদ্ৰপুৰ বাইলেন, ভেটাপাৰা, গুৱাহাটী",
-    online: "অনলাইন ক্লিনিকেল ৰিছেট",
-    onlineSub: "গ্ল’বেল টেলি-ছ’মেটিক চেছন",
+
+    // Moderate / Low Load Translations
+    modLoad: "মধ্যমীয়াৰ পৰা নূন্যতম উত্তেজনাৰ আৰ্হি চিনাক্ত কৰা হৈছে। দৈনন্দিন ফেচিয়া ৰিলিজ আৰু স্ব-পৰিচৰ্যাৰ বাবে আপুনি উপযুক্ত।",
+    restoreTitleMod: "দৈনন্দিন অভ্যাস গঢ়ি তুলক",
+    waitlistBtn: "এপ মুকলিৰ ৱেইটলিষ্টত যোগ দিয়ক",
+    waitlistSub: "ছ’মেটিক লাইফ এপৰ অগ্ৰাধিকাৰ একচেছ প্ৰাপ্ত কৰক",
+
+    // Community / Retake
     community: "মাষ্টাৰক্লাচ কমিউনিটিত যোগদান কৰক",
-    communitySub: "ছ’মেটিক ভাৰত এপৰ অগ্ৰাধিকাৰ একচেছ",
+    communitySub: "ছ’মেটিক ৱেলনেচ নেটৱৰ্কৰ সৈতে সংলগ্ন হওক",
     retake: "অডিট পুনৰ কৰক"
   }
 };
@@ -64,13 +82,18 @@ export default function ResultScreen({ scores, onReset }) {
   const totalScore = scoreValues.reduce((a, b) => a + b, 0);
   const maxPossible = 180;
   const loadPercentage = Math.round((totalScore / maxPossible) * 100);
+  const isHighLoad = loadPercentage > 60;
+
+  const openShatkonaWeb = () => {
+    Linking.openURL("https://shatkonalife.com");
+  };
 
   const openWhatsApp = () => {
     Linking.openURL("https://chat.whatsapp.com/JldO7J7jOuEJUX93dwAikD?mode=gi_t");
   };
 
   const openMaps = () => {
-    const addr = "FasciaMax Studio, H No. 43, Rudrapur Bylane, Bhetapara, Guwahati, Assam 781028";
+    const addr = "SHATKONA CENTER(Tanman Physiotherapy Clinic), H No. 43, Rudrapur Bylane, Bhetapara, Guwahati, Assam 781028";
     const url = Platform.select({
       ios: `maps:0?q=${encodeURIComponent(addr)}`,
       android: `geo:0,0?q=${encodeURIComponent(addr)}`
@@ -102,35 +125,48 @@ export default function ResultScreen({ scores, onReset }) {
           <View style={styles.prescriptionBox}>
             <Text style={styles.prescriptionTitle}>{t.prescriptionTitle}</Text>
             <Text style={styles.prescriptionBody}>
-              {loadPercentage > 60 ? t.highLoad : t.modLoad}
+              {isHighLoad ? t.highLoad : t.modLoad}
             </Text>
           </View>
 
-          {/* CONSULTATION OPTIONS */}
+          {/* DYNAMIC ACTION SECTION BASED ON SCORE */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{t.restoreTitle}</Text>
+            <Text style={styles.sectionTitle}>
+              {isHighLoad ? t.restoreTitleHigh : t.restoreTitleMod}
+            </Text>
             
-            <TouchableOpacity style={styles.optionCard} onPress={openMaps}>
-              <View style={styles.optionInfo}>
-                <Text style={styles.optionType}>{t.inPerson}</Text>
-                <Text style={styles.addressText}>{t.address}</Text>
-              </View>
-              <View style={styles.iconCircle}><Text>📍</Text></View>
-            </TouchableOpacity>
+            {isHighLoad ? (
+              /* HIGH LOAD: TELECONSULT & IN-PERSON CLINICAL CARE */
+              <>
+                <TouchableOpacity style={styles.optionCard} onPress={openShatkonaWeb}>
+                  <View style={styles.optionInfo}>
+                    <Text style={styles.optionType}>{t.teleconsultBtn}</Text>
+                    <Text style={styles.addressText}>{t.teleconsultSub}</Text>
+                  </View>
+                  <View style={styles.iconCircle}><Text>🌐</Text></View>
+                </TouchableOpacity>
 
-            <TouchableOpacity 
-              style={styles.optionCard} 
-              onPress={() => Linking.openURL('https://calendly.com/shatvayu/fasciamax-consult')}
-            >
-              <View style={styles.optionInfo}>
-                <Text style={styles.optionType}>{t.online}</Text>
-                <Text style={styles.addressText}>{t.onlineSub}</Text>
-              </View>
-              <View style={styles.iconCircle}><Text>🌐</Text></View>
-            </TouchableOpacity>
+                <TouchableOpacity style={styles.optionCard} onPress={openMaps}>
+                  <View style={styles.optionInfo}>
+                    <Text style={styles.optionType}>{t.inPersonTitle}</Text>
+                    <Text style={styles.addressText}>{t.address}</Text>
+                  </View>
+                  <View style={styles.iconCircle}><Text>📍</Text></View>
+                </TouchableOpacity>
+              </>
+            ) : (
+              /* LOW / AVERAGE LOAD: APP WAITLIST & COMMUNITY */
+              <TouchableOpacity style={styles.optionCard} onPress={openWhatsApp}>
+                <View style={styles.optionInfo}>
+                  <Text style={styles.optionType}>{t.waitlistBtn}</Text>
+                  <Text style={styles.addressText}>{t.waitlistSub}</Text>
+                </View>
+                <View style={styles.iconCircle}><Text>📱</Text></View>
+              </TouchableOpacity>
+            )}
           </View>
 
-          {/* COMMUNITY ACCESS */}
+          {/* COMMUNITY ACCESS BUTTON */}
           <TouchableOpacity style={styles.communityBtn} onPress={openWhatsApp}>
             <LinearGradient 
               colors={[COPPER_SUN, '#D17B5D']} 
