@@ -219,4 +219,4 @@ const styles = StyleSheet.create({
   optBtn: { backgroundColor: '#FFF', padding: 15, borderRadius: 12, marginBottom: 10, borderWidth: 1, borderColor: '#E0E0E0' },
   btnContent: { flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' },
   optLabel: { fontWeight: '900', fontSize: 12, marginLeft: 15, letterSpacing: 1 }
-}); hvkh
+}); 
