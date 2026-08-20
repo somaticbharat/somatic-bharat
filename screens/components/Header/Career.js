@@ -20,7 +20,7 @@ const translations = {
         badgeBg: '#E8F0FE',
         badgeColor: '#1967D2',
         title: "Biosomatic Research Fellow",
-        desc: "Help us map the 'Jad' (roots) of pain. You will work on social research projects and curate global archives on NF-kB and Epigenetics.",
+        desc: "Help us map the roots of pain. You will work on social research projects and curate global archives on NF-kB and Epigenetics.",
         req: "• Background in Social Science, Biology, or Data Analytics.",
       },
       {

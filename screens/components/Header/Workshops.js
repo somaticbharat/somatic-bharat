@@ -17,16 +17,16 @@ const translations = {
       },
       {
         tag: "CORPORATE WELLNESS",
-        title: "The Resilient Workforce (Mission 2047)",
+        title: "The Resilient Workforce (Mission 2030)",
         details: "A deep dive into nervous system regulation and vagus nerve activation. We teach your team how to reset their somatic state during the workday using the Shatkona Protocol.",
-        loc: "📍 On-site / Corporate",
+        loc: "📍 On-site / Virtual",
         time: "⏱ Half Day",
         color: '#B34700'
       },
       {
         tag: "CLINICAL SPECIALIZATION",
         title: "MSR Masterclass for Professionals",
-        details: "For BPT/MPT graduates. Learn the science of Fascia and the specific manual techniques used in our FasciaMax clinical resets.",
+        details: "For BPT/MPT graduates. Learn the science of Fascia and the specific manual techniques used in our Shatkona Center clinical resets.",
         loc: "📍 Bhetapara Clinic, Ghy",
         time: "⏱ 2 Days",
         color: '#003366'
@@ -49,16 +49,16 @@ const translations = {
       },
       {
         tag: "কৰ্পোৰেট ৱেলনেছ",
-        title: "স্থিতিস্থাপক কৰ্মশক্তি (মিছন ২০৪৭)",
+        title: "স্নায়ৱিকভাৱে সবল কৰ্মশক্তি (মিছন ২০৩০)",
         details: "স্নায়ুতন্ত্ৰ নিয়ন্ত্ৰণ (nervous system regulation) আৰু ভেগাছ নাৰ্ভ (vagus nerve) সক্ৰিয়কৰণৰ গভীৰ অধ্যয়ন। ষটকোন প্ৰটোকল ব্যৱহাৰ কৰি কৰ্মদিনৰ মাজতে কেনেকৈ ছ’মেটিক স্থিতি ৰিছেট কৰিব পাৰি সেইয়া আমি আপোনাৰ দলক শিকাওঁ।",
-        loc: "📍 কৰ্পোৰেট / থলীত",
+        loc: "📍 কৰ্পোৰেট / ভাৰ্চুৱেল",
         time: "⏱ আধা দিন",
         color: '#B34700'
       },
       {
         tag: "ক্লিনিকেল বিশেষজ্ঞতা",
-        title: "পেছাদাৰীসকলৰ বাবে MSR মাষ্টাৰক্লাছ",
-        details: "BPT/MPT স্নাতকসকলৰ বাবে। ফেচিয়া বিজ্ঞান আৰু আমাৰ FasciaMax ক্লিনিকেল ৰিছেটত ব্যৱহৃত নিৰ্দিষ্ট মেনুৱেল কৌশলসমূহ শিকক।",
+        title: "পেছাদাৰীসকলৰ বাবে ছ’মেটিক লিটাৰেচি মাষ্টাৰক্লাছ",
+        details: "BPT/MPT স্নাতকসকলৰ বাবে। ফেচিয়া বিজ্ঞান আৰু আমাৰ ষটকোন কেন্দ্ৰৰ ক্লিনিকেল ৰিছেটত ব্যৱহৃত নিৰ্দিষ্ট মেনুৱেল কৌশলসমূহ শিকক।",
         loc: "📍 ভেটাপাৰা ক্লিনিক, গুৱাহাটী",
         time: "⏱ ২ দিন",
         color: '#003366'

@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 
 const translations = {
   as: {
     visionary: "প্ৰতিষ্ঠাপক",
-    founderName: "ডাঃ এম. পি. দাস পিটি,(BPT, LLB, RYT 500)",
+    founderName: "ডাঃ এম. পি. দাস টি,(BPT, LLB, RYT 500)",
+    clinicalExp: "ক্লিনিকেল অভিজ্ঞতা @ NIMHANS | Apollo Blore",
     founderBody: "১২ বছৰৰো অধিক ক্লিনিকেল অভিজ্ঞতাৰ সৈতে (NIMHANS/Apollo), আমাৰ প্ৰতিষ্ঠাপকে ফিজিঅ’থেৰাপী, আইনী ওকালতি আৰু ছ’মেটিক জ্ঞানৰ মাজত এক নতুন যোগসূত্ৰ স্থাপন কৰিছে। তেখেতৰ যাত্ৰাই 'Uncut' সংযোগ আৱিষ্কাৰ কৰিছিল—য’ত সমাধান নোহোৱা অৱচেতন মনেই শৰীৰত 'অদৃশ্য জুই' বা দীৰ্ঘদিনীয়া বিষ হিচাপে প্ৰকাশ পায়।",
     shatkonaTitle: "ষটকোণ ৬-ভেক্টৰ মেপিং",
     shatkonaDesc: "আমাৰ স্বকীয় ডায়েগনষ্টিক ফ্ৰেমৱৰ্ক। আমি আপোনাৰ 'ছ’মেটিক অডিট' (Somatic Audit) কৰোঁ আৰু বিষৰ উৎস তলত দিয়া ছয়টা গুৰুত্বপূৰ্ণ ভেক্টৰৰ জৰিয়তে মেপিং কৰোঁ:",
@@ -24,6 +25,7 @@ const translations = {
   en: {
     visionary: "The Visionary",
     founderName: "Dr. MP Das PT,(BPT, LLB, RYT 500)",
+    clinicalExp: "Clinical exposure @ NIMHANS | Apollo Blore",
     founderBody: "With over 12 years of clinical exposure (NIMHANS/Apollo), our founder has bridged the gap between physical therapy, legal advocacy, and somatic wisdom. His journey led to the discovery of the 'Uncut' connection—where unresolved subconscious patterns manifest as 'Invisible Fire' or chronic physical pain.",
     shatkonaTitle: "Shatkona 6-Vector Model",
     shatkonaDesc: "Our proprietary diagnostic framework for the 'Somatic Audit.' We map the roots of your pain across six vital dimensions:",
@@ -50,7 +52,18 @@ export const AboutUs = ({ lang = 'as' }) => {
       {/* --- THE FOUNDER --- */}
       <View style={styles.section}>
         <Text style={styles.header}>{t.visionary}</Text>
-        <Text style={styles.subHeader}>{t.founderName}</Text>
+        
+        {/* Founder Image & Credentials */}
+        <View style={styles.founderCard}>
+          <Image 
+            source={require('../../assets/dr-mp-das.png')} 
+            style={styles.founderImg} 
+            resizeMode="cover" 
+          />
+          <Text style={styles.subHeader}>{t.founderName}</Text>
+          <Text style={styles.clinicalExp}>{t.clinicalExp}</Text>
+        </View>
+
         <Text style={styles.body}>{t.founderBody}</Text>
       </View>
 
@@ -87,9 +100,22 @@ export const AboutUs = ({ lang = 'as' }) => {
 const styles = StyleSheet.create({
   container: { paddingVertical: 10, paddingHorizontal: 15 },
   section: { marginBottom: 25 },
-  header: { fontSize: 22, fontWeight: 'bold', color: '#002147', marginBottom: 8 },
-  subHeader: { fontSize: 14, color: '#C5A059', fontWeight: '700', marginBottom: 10 },
-  body: { fontSize: 15, color: '#333', lineHeight: 26, textAlign: 'justify' }, 
+  header: { fontSize: 22, fontWeight: 'bold', color: '#002147', marginBottom: 12 },
+  
+  founderCard: { 
+    alignItems: 'center', 
+    backgroundColor: '#F9F8F4', 
+    padding: 15, 
+    borderRadius: 12, 
+    marginBottom: 15,
+    borderWidth: 1,
+    borderColor: '#EEE'
+  },
+  founderImg: { width: 100, height: 130, borderRadius: 8, marginBottom: 12 },
+  subHeader: { fontSize: 13, color: '#002147', fontWeight: '900', textAlign: 'center', marginBottom: 4 },
+  clinicalExp: { fontSize: 10, color: '#C5A059', fontWeight: 'bold', textAlign: 'center', marginBottom: 5 },
+  
+  body: { fontSize: 14, color: '#333', lineHeight: 24, textAlign: 'justify' }, 
   
   shatkonaBox: { 
     backgroundColor: '#F9F8F4', 

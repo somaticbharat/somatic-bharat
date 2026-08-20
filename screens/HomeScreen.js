@@ -50,9 +50,6 @@ const translations = {
     logout: "LOGOUT",
     auditBtn: "START SOMATIC AUDIT",
     volunteerBtn: "JOIN MISSION 2030 AS VOLUNTEER",
-    founderName: "Dr. MP Das PT, BPT, LLB, RYT500",
-    founderTitle: "Founder of Somatic Bharat Movement",
-    clinicalExp: "Clinical exposure @ NIMHANS | Apollo Blore",
     heroText: "The MRI says you're fine. Blood reports are 'normal'. All treatments failed? Called just in your head? But your body is imploring, seeking deliverance from the pain. Then don't worry anymore. The fatigue, the brain fog, the moving pain—it's not in your head. It's an invisible fire called ",
     heroHighlight: "Central Sensitization—the hidden root behind conditions like Fibromyalgia.",
     ctaHero: "Discover yourself with the 3-min SOMATIC audit",
@@ -86,10 +83,7 @@ const translations = {
     logout: "লগ-আউট",
     auditBtn: "ছ’মেটিক অডিট আৰম্ভ কৰক",
     volunteerBtn: "স্বেচ্ছাসেৱক হিচাপে মিছন ২০৩০-ত যোগ দিয়ক",
-    founderName: "ডাঃ এম. পি. দাস পি.টি., BPT, LLB, RYT500",
-    founderTitle: "প্ৰতিষ্ঠাপক ছ’মেটিক ভাৰত মুভমেণ্ট",
-    clinicalExp: "ক্লিনিকেল অভিজ্ঞতা @ NIMHANS | Apollo Blore",
-    heroText: "আপুনিও এই সমস্যৰ ভুক্তভোগী নেকি? MRI ৰিপৰ্ট ঠিক আছে। তেজৰ পৰীক্ষাও 'স্বাভাৱিক'। সকলো ধৰণৰ চিকিৎসা কৰিও বিফল হৈছে আৰু এই বিষক মনৰ ধাৰণা বুলি কোৱা হৈছে? তেনেহ’লে আৰু চিন্তা নকৰিব। সেই ভাগৰ, মগজুৰ ধুঁৱলী-কুঁৱলী ভাব আৰু শৰীৰৰ যন্ত্ৰণা... এইয়া আপোনাৰ মনৰ ভুল নহয়। এইয়া এক অদৃশ্য জুই যাক কোৱা হয় ",
+    heroText: "আপুনিও এই সমস্যাৰ ভুক্তভোগী নেকি? MRI ৰিপৰ্ট ঠিক আছে। তেজৰ পৰীক্ষাও 'স্বাভাৱিক'। সকলো ধৰণৰ চিকিৎসা কৰিও বিফল হৈছে আৰু এই বিষক মনৰ ধাৰণা বুলি কোৱা হৈছে? তেনেহ’লে আৰু চিন্তা নকৰিব। সেই ভাগৰ, মগজুৰ ধুঁৱলী-কুঁৱলী ভাব আৰু শৰীৰৰ যন্ত্ৰণা... এইয়া আপোনাৰ মনৰ ভুল নহয়। এইয়া এক অদৃশ্য জুই যাক কোৱা হয় ",
     heroHighlight: "চেণ্ট্ৰেল চেন্সিটাইজেচন— যি ফাইব্ৰ’মায়েলজিয়াৰ দৰে যন্ত্ৰণাৰ আঁৰত লুকাই থকা এক গোপন কাৰণ।",
     ctaHero: "৩-মিনিটৰ ছ’মেটিক অডিটৰ জৰিয়তে নিজক আৱিষ্কাৰ কৰক",
     ctaSub: "অন্ধকাৰত নাথাকিব, সমাধান বিচাৰি উলিয়াওক",
@@ -177,6 +171,7 @@ export default function HomeScreen({ onStart, lang, setLang }) {
       setLoginModalVisible(false);
       setEmail('');
       setPassword('');
+      if (onStart) onStart(); 
     } catch (error) {
       Alert.alert("Authentication Error", error.message);
     }
@@ -190,6 +185,7 @@ export default function HomeScreen({ onStart, lang, setLang }) {
       setUser(result.user);
       Alert.alert("Success", "Logged in with Gmail successfully!");
       setLoginModalVisible(false);
+      if (onStart) onStart();
     } catch (error) {
       Alert.alert("Google Sign-In Error", error.message);
     }
@@ -230,6 +226,7 @@ export default function HomeScreen({ onStart, lang, setLang }) {
       setPhoneNumber('');
       setOtpCode('');
       setConfirmResult(null);
+      if (onStart) onStart();
     } catch (error) {
       Alert.alert("Verification Failed", error.message);
     }
@@ -241,6 +238,7 @@ export default function HomeScreen({ onStart, lang, setLang }) {
       await signOut(auth);
       setUser(null);
       Alert.alert("Logged Out", "You have been logged out.");
+      switchPage('HOME'); 
     } catch (error) {
       console.log(error);
     }
@@ -279,16 +277,11 @@ export default function HomeScreen({ onStart, lang, setLang }) {
       default:
         return (
           <>
-            {/* HERO SECTION */}
+            {/* HERO SECTION - ENLARGED HERO TEXT & NO FOUNDER IMAGE */}
             <View style={styles.hero}>
-              <Image source={require('../assets/dr-mp-das.png')} style={styles.img} resizeMode="cover" />
-              <Text style={styles.name}>{t.founderName}</Text>
-              <Text style={styles.subName}>{t.founderTitle}</Text>
-              <Text style={styles.subName}>{t.clinicalExp}</Text>
-              <View style={styles.goldDivider} />
               <Text style={styles.hook}>
                 {t.heroText}
-                <Text style={{color: MATTE_GOLD, fontWeight: 'bold'}}>{t.heroHighlight}</Text>
+                <Text style={{color: MATTE_GOLD, fontWeight: '900'}}>{t.heroHighlight}</Text>
               </Text>
               
               <View style={styles.heroActions}>
@@ -395,7 +388,6 @@ export default function HomeScreen({ onStart, lang, setLang }) {
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Authentication Hub</Text>
             
-            {/* Auth Tab Switcher */}
             <View style={styles.authTabRow}>
               <TouchableOpacity 
                 style={[styles.authTabBtn, authTab === 'email' && styles.authTabBtnActive]} 
@@ -417,7 +409,6 @@ export default function HomeScreen({ onStart, lang, setLang }) {
               </TouchableOpacity>
             </View>
 
-            {/* EMAIL / PASSWORD FORM */}
             {authTab === 'email' && (
               <View style={{ width: '100%' }}>
                 <TextInput 
@@ -447,7 +438,6 @@ export default function HomeScreen({ onStart, lang, setLang }) {
               </View>
             )}
 
-            {/* PHONE OTP FORM */}
             {authTab === 'otp' && (
               <View style={{ width: '100%', alignItems: 'center' }}>
                 {!confirmResult ? (
@@ -460,7 +450,7 @@ export default function HomeScreen({ onStart, lang, setLang }) {
                       value={phoneNumber} 
                       onChangeText={setPhoneNumber} 
                     />
-                    <View nativeID="recaptcha-container" style={{ marginVertical: 5 }} />
+                    <View id="recaptcha-container" style={{ marginVertical: 5 }} />
                     <TouchableOpacity style={styles.modalBtn} onPress={handleSendOTP}>
                       <Text style={styles.modalBtnText}>Send OTP</Text>
                     </TouchableOpacity>
@@ -484,7 +474,6 @@ export default function HomeScreen({ onStart, lang, setLang }) {
               </View>
             )}
 
-            {/* GMAIL / GOOGLE AUTH DIRECT ACTION */}
             {authTab === 'google' && (
               <View style={{ width: '100%', alignItems: 'center', paddingVertical: 15 }}>
                 <TouchableOpacity style={[styles.modalBtn, { backgroundColor: '#DB4437' }]} onPress={handleGoogleLogin}>
@@ -536,16 +525,16 @@ const styles = StyleSheet.create({
   navText: { color: '#FFF', fontSize: 11, fontWeight: 'bold', letterSpacing: 1 },
   mainContainer: { minHeight: 400 },
   pageWrapper: { padding: 20, backgroundColor: '#FFF' },
+  
+  // HERO STYLES (ENLARGED TEXT & NO FOUNDER PIC)
   hero: { padding: 30, alignItems: 'center', backgroundColor: '#FFF' },
-  img: { width: 110, height: 140, borderRadius: 8, marginBottom: 15 },
-  name: { fontSize: 18, fontWeight: '900', color: DEEP_BLUE, textAlign: 'center' },
-  subName: { fontSize: 11, color: '#666', marginTop: 2, textAlign: 'center' },
-  goldDivider: { width: 40, height: 2, backgroundColor: MATTE_GOLD, marginVertical: 15 },
-  hook: { fontSize: 15, textAlign: 'center', lineHeight: 26, color: '#333', marginBottom: 25 },
+  hook: { fontSize: 18, textAlign: 'center', lineHeight: 30, color: DEEP_BLUE, marginBottom: 25, fontWeight: '600' },
+  
   heroActions: { width: '100%', alignItems: 'center' },
   heroCta: { backgroundColor: DEEP_BLUE, width: '85%', paddingVertical: 16, borderRadius: 35, elevation: 8, alignItems: 'center' },
   heroCtaText: { color: '#FFF', fontWeight: '900', fontSize: 13, letterSpacing: 1 },
-  dnaSubText: { fontSize: 10, color: '#666', marginTop: 12, fontWeight: '600', textAlign: 'center' },
+  dnaSubText: { fontSize: 11, color: '#666', marginTop: 12, fontWeight: '700', textAlign: 'center' },
+  
   gridSection: { paddingHorizontal: 20 },
   sectionLabel: { fontSize: 10, fontWeight: 'bold', color: MATTE_GOLD, letterSpacing: 2, textAlign: 'center', marginBottom: 10 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginTop: 10 },
