@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'r
 const translations = {
   en: {
     header: "Join the Somatic Movement",
-    subHeader: "Building the Future of Bharat's Health Literacy",
+    subHeader: "Building the Future of Bharat's Somatic Literacy",
     introText: "At Shatkona Foundation, we don't just hire employees; we recruit pioneers. Whether you are a clinician, a researcher, or a technologist, your work here contributes directly to Mission 2047.",
     roles: [
       {
@@ -12,7 +12,7 @@ const translations = {
         badgeBg: '#F2F2F2',
         badgeColor: '#666',
         title: "Somatic Practitioner (MPT/BPT)",
-        desc: "Join the FasciaMax clinical wing. You will be trained in the proprietary Shatkona MSR Protocol to treat chronic pain, Fibromyalgia, and CS.",
+        desc: "Join the SHATKONA CENTER wing. You will be trained in the proprietary Shatkona Somatic Protocol to treat chronic pain, Fibromyalgia, and CS.",
         req: "• Specialization in Musculoskeletal/Neuro preferred.",
       },
       {
@@ -38,15 +38,15 @@ const translations = {
   },
   as: {
     header: "ছ’মেটিক আন্দোলনত যোগদান কৰক",
-    subHeader: "ভাৰতৰ স্বাস্থ্য সাক্ষৰতাৰ ভৱিষ্যত গঢ়ি তোলা",
-    introText: "ছ’মেটিক ভাৰত ফাউণ্ডেশ্যনত আমি কেৱল কৰ্মচাৰী নিয়োগ নকৰো; আমি অগ্ৰগামী বিপ্লৱী বিচাৰো। আপুনি এজন চিকিৎসক, গৱেষক বা প্ৰযুক্তিবিদে নহওক কিয়, আপোনাৰ কামে পোনপটীয়াকৈ 'মিছন ২০৪৭'ত অৰিহণা যোগাব।",
+    subHeader: "ভাৰতৰ ছ’মেটিক সাক্ষৰতাৰ ভৱিষ্যত গঢ়ি তোলা",
+    introText: "ছ’মেটিক ভাৰত মুভমেণ্টত আমি কেৱল কৰ্মচাৰী নিয়োগ নকৰো; আমি অগ্ৰগামী বিপ্লৱী বিচাৰো। আপুনি এজন চিকিৎসক, গৱেষক বা প্ৰযুক্তিবিদে নহওক কিয়, আপোনাৰ কামে পোনপটীয়াকৈ 'মিছন ২০৪৭'ত অৰিহণা যোগাব।",
     roles: [
       {
         badge: "ক্লিনিকেল",
         badgeBg: '#F2F2F2',
         badgeColor: '#666',
         title: "ছ’মেটিক প্ৰেকটিচনাৰ (MPT/BPT)",
-        desc: "FasciaMax ক্লিনিকেল উইঙত যোগদান কৰক। আপোনাক দীৰ্ঘদিনীয়া বিষ আৰু ফাইব্ৰ’মায়েলজিয়াৰ চিকিৎসাৰ বাবে ষটকোণ MSR প্ৰটোকলত প্ৰশিক্ষণ দিয়া হ'ব।",
+        desc: "ষটকোন ক্লিনিকেল উইঙত যোগদান কৰক। আপোনাক দীৰ্ঘদিনীয়া বিষ আৰু ফাইব্ৰ’মায়েলজিয়াৰ চিকিৎসাৰ বাবে ষটকোণ MSR প্ৰটোকলত প্ৰশিক্ষণ দিয়া হ'ব।",
         req: "• মাস্কুলোস্কেলিটেল/নিউৰ’ বিভাগত বিশেষজ্ঞতা থকাটো অগ্ৰাধিকাৰযোগ্য।",
       },
       {
@@ -54,7 +54,7 @@ const translations = {
         badgeBg: '#E8F0FE',
         badgeColor: '#1967D2',
         title: "বায়োছ’মেটিক গৱেষণা ফেল’",
-        desc: "বিষৰ 'শিপা' (Jad) চিনাক্ত কৰাত আমাক সহায় কৰক। আপুনি সামাজিক গৱেষণা প্ৰকল্প আৰু এপিজেনেটিক্সৰ গোলকীয় আৰ্কাইভৰ কামত জড়িত হ'ব।",
+        desc: "বিষৰ মূল চিনাক্ত কৰাত আমাক সহায় কৰক। আপুনি সামাজিক গৱেষণা প্ৰকল্প আৰু এপিজেনেটিক্সৰ গোলকীয় আৰ্কাইভৰ কামত জড়িত হ'ব।",
         req: "• সমাজ বিজ্ঞান, জীৱবিজ্ঞান বা ডাটা এনালিটিক্সৰ জ্ঞান থকাটো প্ৰয়োজনীয়।",
       },
       {
@@ -67,7 +67,7 @@ const translations = {
       }
     ],
     applyTitle: "আপুনি পৰিৱৰ্তন আনিবলৈ সাজুনে?",
-    applyBody: "আপোনাৰ চিভি (CV) আৰু আমাৰ মিছন ২০৪৭-ৰ সৈতে আপুনি কেনেকৈ সংগতি ৰাখে তাৰ এক চমু বিৱৰণ আমাৰ নিয়োগ দললৈ প্ৰেৰণ কৰক।",
+    applyBody: "আপোনাৰ চিভি (CV) আৰু আমাৰ মিছন ২০৩০-ৰ সৈতে আপুনি কেনেকৈ সংগতি ৰাখে তাৰ এক চমু বিৱৰণ আমাৰ নিয়োগ দললৈ প্ৰেৰণ কৰক।",
     cta: "এতিয়াই আবেদন কৰক"
   }
 };

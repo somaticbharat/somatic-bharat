@@ -1,26 +1,31 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Linking, Dimensions, Platform, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Dimensions, SafeAreaView, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+
+// --- FIREBASE IMPORTS ---
+import { auth } from './firebaseConfig';
+import { signOut } from 'firebase/auth';
 
 const { width } = Dimensions.get('window');
 
-// LIVEN VITALITY PALETTE
-const EARTH_DARK = '#001D21';   // Deep Grounding Cyan/Black
-const VITAL_TEAL = '#0be1f5';   // Prana / Fluidity
-const MOSS_GLOW = '#83C5BE';    // Growth / Vagal Tone
-const COPPER_SUN = '#78e2ad';   // Heat / Healing / Shatkona
-const MIST_SILVER = '#EDF6F9';  // Clarity
-const MATTE_GOLD = '#C5A059';
+// --- MOOD-LIFTING BLUE TO WHITE VITALITY PALETTE ---
+const SKY_DEEP = '#00416A';       // Rich, grounding deep ocean blue
+const SKY_MID = '#0284C7';        // Vibrant, uplifting bright blue
+const SKY_LIGHT = '#E0F2FE';      // Airy soft cyan-tinted mist
+const PURE_WHITE = '#FFFFFF';     // Clean, breathable white
+const ACCENT_GOLD = '#D97706';    // Warm restorative highlight
+const TEXT_DARK = '#0F172A';      // Deep readable charcoal for white backgrounds
+const TEXT_MUTED = '#475569';     // Soft supportive grey
 
 const TRANSLATIONS = {
   en: {
     header: "SOMATIC VITALITY AUDIT",
     calculating: "CALCULATING SOMATIC LOAD...",
-    systemicLoad: "SYSTEMIC LOAD",
-    prescriptionTitle: "VITALITY PRESCRIPTION",
+    systemicLoad: "SOMATIC LOAD",
+    prescriptionTitle: "YOUR TAILORED VITALITY PATH",
     
     // High Load Translations
-    highLoad: "High systemic load detected. Your somatic system requires a clinical reset. We recommend a 1-on-1 consultation or studio visit to restore your baseline.",
+    highLoad: "High Somatic load detected. Your nervous system is working overtime. We recommend a gentle clinical reset or 1-on-1 guidance to help your body safely return to its natural baseline.",
     restoreTitleHigh: "RECOMMENDED CLINICAL CARE",
     teleconsultBtn: "SCHEDULE TELECONSULTATION",
     teleconsultSub: "1-on-1 Online Clinical Reset via Shatkona Life",
@@ -28,47 +33,46 @@ const TRANSLATIONS = {
     address: "#43, Rudrapur Bylane, Bhetapara, Guwahati",
 
     // Moderate / Low Load Translations
-    modLoad: "Moderate to low tension patterns identified. You are a great candidate for self-guided daily vagal toning and guided fascia maintenance.",
+    modLoad: "Balanced patterns identified! You are in an ideal space to practice self-guided daily vagal toning and mindful fascia maintenance to keep your energy flowing smoothly.",
     restoreTitleMod: "BUILD YOUR DAILY PRACTICE",
     waitlistBtn: "JOIN APP LAUNCH WAITLIST",
     waitlistSub: "Get Priority Access to Shatkona Life App & Masterclasses",
 
     // Action & Retake
-    saveAndContinue: "SAVE RESULTS & UNLOCK PATHWAY",
+    saveAndContinue: "SAVE RESULTS & PROCEED",
     community: "JOIN MASTERCLASS COMMUNITY",
     communitySub: "Connect with our Somatic Wellness Network",
-    retake: "RETAKE AUDIT"
+    retake: "LOGOUT"
   },
   as: {
     header: "ছ’মেটিক ভাইটেলিটি অডিট",
     calculating: "ছ’মেটিক লোড গণনা কৰা হৈছে...",
-    systemicLoad: "প্ৰণালীবদ্ধ বোজা (LOAD)",
-    prescriptionTitle: "ভাইটেলিটি প্ৰেছক্ৰিপচন",
+    systemicLoad: "স্নায়ৱিক হেঁচা (LOAD)",
+    prescriptionTitle: "আপোনাৰ বাবে বিশেষ পৰামৰ্শ",
     
     // High Load Translations
-    highLoad: "উচ্চ প্ৰণালীবদ্ধ বোজা ধৰা পৰিছে। আপোনাৰ নিউৰেল বেচলাইন পুনৰুদ্ধাৰৰ বাবে ক্লিনিকেল ৰিছেট আৰু ১-অন-১ পৰামৰ্শৰ প্ৰয়োজন।",
-    restoreTitleHigh: "পৰামৰ্শিত ক্লিনিকেল সেৱা",
+    highLoad:"আপোনাৰ শৰীৰত অত্যাধিক স্নায়ৱিক হেঁচা ধৰা পৰিছে। এই অৱস্থাৰ পৰা মুক্ত হ'বলৈ সঠিক চিকিৎসা আৰু চিকিৎসকৰ পোনপটীয়া পৰামৰ্শৰ প্ৰয়োজন।",
+    restoreTitleHigh: "চিকিৎসাৰ পৰামৰ্শ",
     teleconsultBtn: "অনলাইন টেলি-কনচাল্টেশ্যন",
-    teleconsultSub: "ছ’মেটিক লাইফৰ জৰিয়তে ১-অন-১ চেছন বুক কৰক",
+    teleconsultSub: "ষটকোন লাইফৰ জৰিয়তে ১-অন-১ চেছন বুক কৰক",
     inPersonTitle: "ষটকোন কেন্দ্ৰ’(তনমন ফিজিঅ’থেৰাপী ক্লিনিক)",
     address: "গৃহ নং ৪৩, ৰুদ্ৰপুৰ বাইলেন, ভেটাপাৰা, গুৱাহাটী",
 
     // Moderate / Low Load Translations
-    modLoad: "মধ্যমীয়াৰ পৰা নূন্যতম উত্তেজনাৰ আৰ্হি চিনাক্ত কৰা হৈছে। দৈনন্দিন ফেচিয়া ৰিলিজ আৰু স্ব-পৰিচৰ্যাৰ বাবে আপুনি উপযুক্ত।",
+    modLoad: "মধ্যমীয়াৰ পৰা নূন্যতম স্নায়ৱিক হেঁচা চিনাক্ত কৰা হৈছে। দৈনন্দিন ফেচিয়া ৰিলিজ আৰু স্ব-পৰিচৰ্যাৰ বাবে আপুনি উপযুক্ত।",
     restoreTitleMod: "দৈনন্দিন অভ্যাস গঢ়ি তুলক",
     waitlistBtn: "এপ মুকলিৰ ৱেইটলিষ্টত যোগ দিয়ক",
-    waitlistSub: "ছ’মেটিক লাইফ এপৰ অগ্ৰাধিকাৰ একচেছ প্ৰাপ্ত কৰক",
+    waitlistSub: "ষটকোন লাইফ এপৰ প্ৰথম সুবিধা লাভ কৰক",
 
     // Action & Retake
-    saveAndContinue: "ফলাফল সংৰক্ষণ কৰি আগবাঢ়ক",
+    saveAndContinue: "ফলাফল সংৰক্ষণ কৰক",
     community: "মাষ্টাৰক্লাচ কমিউনিটিত যোগদান কৰক",
     communitySub: "ছ’মেটিক ৱেলনেচ নেটৱৰ্কৰ সৈতে সংলগ্ন হওক",
-    retake: "অডিট পুনৰ কৰক"
+    retake: "লগআউট"
   }
 };
 
 export default function ResultScreen({ scores, onSaveTrigger, onReset, lang: parentLang, setLang: parentSetLang }) {
-  // Local language state fallback if parent lang isn't passed down directly
   const [localLang, setLocalLang] = useState(parentLang || 'en');
   const currentLang = parentLang || localLang;
   const t = TRANSLATIONS[currentLang];
@@ -81,12 +85,25 @@ export default function ResultScreen({ scores, onSaveTrigger, onReset, lang: par
     }
   };
 
-  // --- SAFETY GUARD ---
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      Alert.alert("Logged Out", "You have been logged out successfully.");
+      if (onReset) {
+        onReset();
+      }
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    }
+  };
+
   if (!scores || Object.keys(scores).length === 0) {
     return (
-      <View style={[styles.fullContainer, { justifyContent: 'center', alignItems: 'center', backgroundColor: EARTH_DARK }]}>
-        <Text style={{ color: MOSS_GLOW, letterSpacing: 2 }}>{t.calculating}</Text>
-      </View>
+      <LinearGradient colors={[SKY_DEEP, SKY_MID]} style={styles.fullContainer}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{ color: PURE_WHITE, letterSpacing: 2, fontWeight: '600' }}>{t.calculating}</Text>
+        </View>
+      </LinearGradient>
     );
   }
 
@@ -94,21 +111,23 @@ export default function ResultScreen({ scores, onSaveTrigger, onReset, lang: par
   const totalScore = scoreValues.reduce((a, b) => a + b, 0);
   const maxPossible = 180;
   const loadPercentage = Math.round((totalScore / maxPossible) * 100);
-  const isHighLoad = loadPercentage > 50; // Adjust threshold matching your App.js logic
+  const isHighLoad = loadPercentage > 50;
 
   return (
-    <LinearGradient colors={[EARTH_DARK, '#002F35']} style={styles.fullContainer}>
+    <LinearGradient colors={[SKY_DEEP, SKY_MID, SKY_LIGHT, PURE_WHITE]} style={styles.fullContainer}>
       <SafeAreaView style={{ flex: 1 }}>
-        {/* FLOATING TOGGLE */}
+        
+        {/* FLOATING LANGUAGE TOGGLE */}
         <TouchableOpacity style={styles.langToggle} onPress={handleLangToggle}>
           <Text style={styles.langToggleText}>{currentLang === 'en' ? 'অসমীয়া' : 'ENGLISH'}</Text>
         </TouchableOpacity>
 
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           
+          {/* HEADER TITLE */}
           <Text style={styles.headerText}>{t.header}</Text>
 
-          {/* SCORE RING */}
+          {/* BREathing ROOM & SCORE RING */}
           <View style={styles.scoreContainer}>
             <View style={styles.outerRing}>
               <Text style={styles.percentageText}>{loadPercentage}%</Text>
@@ -116,15 +135,18 @@ export default function ResultScreen({ scores, onSaveTrigger, onReset, lang: par
             </View>
           </View>
 
-          {/* PRESCRIPTION BOX */}
+          {/* HIGHLIGHTED PRESCRIPTION BOX */}
           <View style={styles.prescriptionBox}>
-            <Text style={styles.prescriptionTitle}>{t.prescriptionTitle}</Text>
-            <Text style={styles.prescriptionBody}>
-              {isHighLoad ? t.highLoad : t.modLoad}
-            </Text>
+            <View style={styles.prescriptionGlowBar} />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.prescriptionTitle}>{t.prescriptionTitle}</Text>
+              <Text style={styles.prescriptionBody}>
+                {isHighLoad ? t.highLoad : t.modLoad}
+              </Text>
+            </View>
           </View>
 
-          {/* SUMMARY PREVIEW OF NEXT STEP */}
+          {/* NEXT STEP SECTION WITH AMPLE BREATHING SPACE */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>
               {isHighLoad ? t.restoreTitleHigh : t.restoreTitleMod}
@@ -140,16 +162,16 @@ export default function ResultScreen({ scores, onSaveTrigger, onReset, lang: par
                 </Text>
               </View>
               <View style={styles.iconCircle}>
-                <Text>{isHighLoad ? '🌐' : '📱'}</Text>
+                <Text style={{ fontSize: 16 }}>{isHighLoad ? '🌐' : '✨'}</Text>
               </View>
             </View>
           </View>
 
-          {/* PRIMARY CALL TO ACTION: SAVE & PROCEED TO AUTH/DESTINATION */}
-          <TouchableOpacity style={styles.communityBtn} onPress={onSaveTrigger}>
+          {/* PRIMARY CALL TO ACTION BUTTON */}
+          <TouchableOpacity style={styles.communityBtn} onPress={onSaveTrigger} activeOpacity={0.9}>
             <LinearGradient 
-              colors={[COPPER_SUN, '#D17B5D']} 
-              start={{x:0, y:0}} end={{x:1, y:0}} 
+              colors={[SKY_MID, SKY_DEEP]} 
+              start={{x: 0, y: 0}} end={{x: 1, y: 0}} 
               style={styles.gradientBtn}
             >
               <Text style={styles.communityBtnText}>{t.saveAndContinue}</Text>
@@ -157,7 +179,8 @@ export default function ResultScreen({ scores, onSaveTrigger, onReset, lang: par
             </LinearGradient>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={onReset} style={styles.resetBtn}>
+          {/* LOGOUT / RETAKE ACTION */}
+          <TouchableOpacity onPress={handleLogout} style={styles.resetBtn}>
             <Text style={styles.resetText}>{t.retake}</Text>
           </TouchableOpacity>
 
@@ -169,42 +192,29 @@ export default function ResultScreen({ scores, onSaveTrigger, onReset, lang: par
 
 const styles = StyleSheet.create({
   fullContainer: { flex: 1 },
-  langToggle: { position: 'absolute', top: 50, right: 20, zIndex: 1000, backgroundColor: MATTE_GOLD, padding: 8, borderRadius: 20 },
-  langToggleText: { color: EARTH_DARK, fontWeight: '900', fontSize: 10 },
-  scrollContent: { padding: 25, alignItems: 'center', paddingTop: 60 },
-  headerText: { color: MOSS_GLOW, fontSize: 13, fontWeight: '900', letterSpacing: 3, marginBottom: 30, textAlign: 'center' },
-  scoreContainer: { marginBottom: 30 },
-  outerRing: { 
-    width: 140, height: 140, borderRadius: 70, 
-    borderWidth: 2, borderColor: VITAL_TEAL, 
-    justifyContent: 'center', alignItems: 'center',
-    backgroundColor: 'rgba(131, 197, 190, 0.05)'
-  },
-  percentageText: { color: MIST_SILVER, fontSize: 36, fontWeight: '200' },
-  loadLabel: { color: MOSS_GLOW, fontSize: 9, letterSpacing: 1, marginTop: 5, fontWeight: '700' },
-  prescriptionBox: { 
-    width: '100%', padding: 22, borderRadius: 15, 
-    backgroundColor: 'rgba(131, 197, 190, 0.08)', 
-    borderWidth: 1, borderColor: 'rgba(131, 197, 190, 0.2)',
-    marginBottom: 30 
-  },
-  prescriptionTitle: { color: COPPER_SUN, fontSize: 11, fontWeight: '900', letterSpacing: 1.5, marginBottom: 10 },
-  prescriptionBody: { color: MIST_SILVER, fontSize: 13, lineHeight: 22, opacity: 0.85 },
-  section: { width: '100%', marginBottom: 20 },
-  sectionTitle: { color: VITAL_TEAL, fontSize: 11, fontWeight: '800', letterSpacing: 1.5, marginBottom: 12 },
-  optionCard: { 
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    backgroundColor: 'rgba(0, 109, 119, 0.15)', padding: 18, borderRadius: 16,
-    borderWidth: 1, borderColor: 'rgba(0, 109, 119, 0.3)'
-  },
-  optionInfo: { flex: 1 },
-  optionType: { color: '#FFF', fontSize: 12, fontWeight: '800', letterSpacing: 0.5 },
-  addressText: { color: MOSS_GLOW, fontSize: 10, marginTop: 4, opacity: 0.7 },
-  iconCircle: { width: 34, height: 34, borderRadius: 17, backgroundColor: 'rgba(255,255,255,0.05)', justifyContent: 'center', alignItems: 'center' },
-  communityBtn: { width: '100%', marginTop: 10, borderRadius: 16, overflow: 'hidden' },
-  gradientBtn: { padding: 18, alignItems: 'center' },
-  communityBtnText: { color: '#FFF', fontWeight: '900', fontSize: 12, letterSpacing: 1, textAlign: 'center' },
-  communitySubText: { color: 'rgba(255,255,255,0.7)', fontSize: 9, marginTop: 4, fontWeight: '600' },
-  resetBtn: { marginTop: 30, paddingBottom: 40 },
-  resetText: { color: VITAL_TEAL, fontSize: 11, fontWeight: '800', letterSpacing: 1 }
+  langToggle: { position: 'absolute', top: 50, right: 24, zIndex: 1000, backgroundColor: PURE_WHITE, paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 3 },
+  langToggleText: { color: SKY_DEEP, fontWeight: '900', fontSize: 10, letterSpacing: 1 },
+  scrollContent: { paddingHorizontal: 28, paddingTop: 70, paddingBottom: 60, alignItems: 'center' },
+  headerText: { color: PURE_WHITE, fontSize: 13, fontWeight: '900', letterSpacing: 3, marginBottom: 40, textAlign: 'center', textShadowColor: 'rgba(0, 0, 0, 0.15)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 3 },
+  scoreContainer: { marginBottom: 40, alignItems: 'center' },
+  outerRing: { width: 150, height: 150, borderRadius: 75, borderWidth: 3, borderColor: PURE_WHITE, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(255, 255, 255, 0.18)', shadowColor: '#FFF', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.3, shadowRadius: 10, elevation: 6 },
+  percentageText: { color: PURE_WHITE, fontSize: 40, fontWeight: '200', letterSpacing: 1 },
+  loadLabel: { color: PURE_WHITE, fontSize: 9, letterSpacing: 1.5, marginTop: 6, fontWeight: '800', opacity: 0.9 },
+  prescriptionBox: { flexDirection: 'row', width: '100%', padding: 24, borderRadius: 20, backgroundColor: PURE_WHITE, borderWidth: 1, borderColor: 'rgba(2, 132, 199, 0.15)', marginBottom: 35, shadowColor: '#0284C7', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.08, shadowRadius: 16, elevation: 4 },
+  prescriptionGlowBar: { width: 4, backgroundColor: SKY_MID, borderRadius: 2, marginRight: 16 },
+  prescriptionTitle: { color: ACCENT_GOLD, fontSize: 11, fontWeight: '900', letterSpacing: 1.5, marginBottom: 10 },
+  prescriptionBody: { color: TEXT_DARK, fontSize: 13, lineHeight: 24, fontWeight: '400', opacity: 0.9 },
+  section: { width: '100%', marginBottom: 30 },
+  sectionTitle: { color: TEXT_DARK, fontSize: 11, fontWeight: '800', letterSpacing: 1.5, marginBottom: 14, opacity: 0.8 },
+  optionCard: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: PURE_WHITE, padding: 20, borderRadius: 18, borderWidth: 1, borderColor: 'rgba(2, 132, 199, 0.12)', shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.04, shadowRadius: 8, elevation: 2 },
+  optionInfo: { flex: 1, paddingRight: 10 },
+  optionType: { color: TEXT_DARK, fontSize: 12, fontWeight: '900', letterSpacing: 0.5 },
+  addressText: { color: TEXT_MUTED, fontSize: 10, marginTop: 6, lineHeight: 15, fontWeight: '500' },
+  iconCircle: { width: 40, height: 40, borderRadius: 20, backgroundColor: SKY_LIGHT, justifyContent: 'center', alignItems: 'center' },
+  communityBtn: { width: '100%', marginTop: 10, borderRadius: 18, overflow: 'hidden', shadowColor: SKY_DEEP, shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.2, shadowRadius: 12, elevation: 5 },
+  gradientBtn: { paddingVertical: 20, paddingHorizontal: 20, alignItems: 'center' },
+  communityBtnText: { color: PURE_WHITE, fontWeight: '900', fontSize: 12, letterSpacing: 1.5, textAlign: 'center' },
+  communitySubText: { color: PURE_WHITE, fontSize: 9, marginTop: 6, fontWeight: '600', opacity: 0.85, letterSpacing: 0.5 },
+  resetBtn: { marginTop: 35, paddingBottom: 20, alignItems: 'center' },
+  resetText: { color: TEXT_MUTED, fontSize: 11, fontWeight: '800', letterSpacing: 1.5 }
 });

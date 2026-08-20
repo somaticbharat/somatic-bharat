@@ -4,10 +4,10 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 const translations = {
   as: {
     visionary: "প্ৰতিষ্ঠাপক",
-    founderName: "ডাঃ এম. পি. দাস (PT, LLB, RYT 500)",
+    founderName: "ডাঃ এম. পি. দাস পিটি,(BPT, LLB, RYT 500)",
     founderBody: "১২ বছৰৰো অধিক ক্লিনিকেল অভিজ্ঞতাৰ সৈতে (NIMHANS/Apollo), আমাৰ প্ৰতিষ্ঠাপকে ফিজিঅ’থেৰাপী, আইনী ওকালতি আৰু ছ’মেটিক জ্ঞানৰ মাজত এক নতুন যোগসূত্ৰ স্থাপন কৰিছে। তেখেতৰ যাত্ৰাই 'Uncut' সংযোগ আৱিষ্কাৰ কৰিছিল—য’ত সমাধান নোহোৱা অৱচেতন মনেই শৰীৰত 'অদৃশ্য জুই' বা দীৰ্ঘদিনীয়া বিষ হিচাপে প্ৰকাশ পায়।",
     shatkonaTitle: "ষটকোণ ৬-ভেক্টৰ মেপিং",
-    shatkonaDesc: "আমাৰ স্বকীয় ডায়েগনষ্টিক ফ্ৰেমৱৰ্ক। আমি আপোনাৰ বিষৰ উৎস তলত দিয়া ছয়টা গুৰুত্বপূৰ্ণ ভেক্টৰৰ জৰিয়তে মেপিং কৰোঁ:",
+    shatkonaDesc: "আমাৰ স্বকীয় ডায়েগনষ্টিক ফ্ৰেমৱৰ্ক। আমি আপোনাৰ 'ছ’মেটিক অডিট' (Somatic Audit) কৰোঁ আৰু বিষৰ উৎস তলত দিয়া ছয়টা গুৰুত্বপূৰ্ণ ভেক্টৰৰ জৰিয়তে মেপিং কৰোঁ:",
     vectors: [
       { n: "১. যান্ত্ৰিক (Mechanical)", d: "গাঁঠি আৰু কলাৰ চাপ" },
       { n: "২. পূৰ্বপুৰুষীয় (Ancestral)", d: "এপিজেনেটিক্সৰ প্ৰভাৱ" },
@@ -16,17 +16,17 @@ const translations = {
       { n: "৫. গাথঁনিগত (Structural)", d: "ফেচিয়েল এলাইনমেন্ট" },
       { n: "৬. হিউমৰেল (Humoral)", d: "প্ৰণালীবদ্ধ বিষাক্ততা" }
     ],
-    missionTitle: "মিছন ২০৪৭: এক সুদৃঢ় স্নায়ৱিক ভাৰত",
-    missionBody: "আমাৰ লক্ষ্য এখন 'যন্ত্ৰণামুক্ত আৰু স্নায়ৱিকভাৱে সুদৃঢ় ভাৰত' গঢ়ি তোলা। ২০৪৭ চনৰ ভিতৰত আমি প্ৰতিখন বিদ্যালয় আৰু কৰ্প’ৰেট কাৰ্যালয়ত ছ’মেটিক শিক্ষা (Somatic Literacy) কাৰ্যকৰী কৰিব বিচাৰোঁ, যাতে ৰাষ্ট্ৰীয় কৰ্মশক্তিয়ে কেৱল উৎপাদনশীল হোৱাই নহয়, বৰঞ্চ জৈৱিকভাৱে নিয়ন্ত্রিত আৰু ট্ৰমা-ইনফৰ্মড হয়।",
+    missionTitle: "মিছন ২০৩০: এক সুদৃঢ় স্নায়ৱিক ভাৰত",
+    missionBody: "আমাৰ লক্ষ্য এখন 'যন্ত্ৰণামুক্ত আৰু স্নায়ৱিকভাৱে সুদৃঢ় ভাৰত' গঢ়ি তোলা। ২০৩০ চনৰ ভিতৰত আমি প্ৰতিখন বিদ্যালয় আৰু কৰ্প’ৰেট কাৰ্যালয়ত ছ’মেটিক শিক্ষা (Somatic Literacy) কাৰ্যকৰী কৰিব বিচাৰোঁ, যাতে ৰাষ্ট্ৰীয় কৰ্মশক্তিয়ে কেৱল উৎপাদনশীল হোৱাই নহয়, বৰঞ্চ জৈৱিকভাৱে নিয়ন্ত্রিত আৰু ট্ৰমা-ইনফৰ্মড হয়।",
     foundationTitle: "ছ’মেটিক ভাৰত MOVEMENT",
     foundationBody: "এক অলাভজনক সংস্থা যি সামাজিক গৱেষণা (TISRI) আৰু বৃত্তিমূলক শিক্ষা (SIBS Academy) ৰ বাবে উৎসৰ্গিত। আমি বিজ্ঞান, সংস্কৃতি আৰু সহানুভূতিৰ জৰিয়তে 'অসমাধানিত বিষৰ মহামাৰী' দূৰ কৰিবলৈ সংকল্পবদ্ধ।"
   },
   en: {
     visionary: "The Visionary",
-    founderName: "Dr. MP Das (PT, LLB, RYT 500)",
+    founderName: "Dr. MP Das PT,(BPT, LLB, RYT 500)",
     founderBody: "With over 12 years of clinical exposure (NIMHANS/Apollo), our founder has bridged the gap between physical therapy, legal advocacy, and somatic wisdom. His journey led to the discovery of the 'Uncut' connection—where unresolved subconscious patterns manifest as 'Invisible Fire' or chronic physical pain.",
     shatkonaTitle: "Shatkona 6-Vector Model",
-    shatkonaDesc: "Our proprietary diagnostic framework for the 'DNA Audit.' We map the roots of your pain across six vital dimensions:",
+    shatkonaDesc: "Our proprietary diagnostic framework for the 'Somatic Audit.' We map the roots of your pain across six vital dimensions:",
     vectors: [
       { n: "1. Mechanical", d: "Joint & Tissue Load" },
       { n: "2. Ancestral", d: "Epigenetic Imprints" },
@@ -35,8 +35,8 @@ const translations = {
       { n: "5. Structural", d: "Fascial Alignment" },
       { n: "6. Humoral", d: "Systemic Toxicity" }
     ],
-    missionTitle: "Mission 2047: Neuro-Resilient Bharat",
-    missionBody: "We are committed to building a 'Pain-Free & Neuro-Resilient India.' By 2047, we aim to implement somatic literacy across every school and corporate space, ensuring a national workforce that is not just productive, but biologically regulated and trauma-informed.",
+    missionTitle: "Mission 2030: Neuro-Resilient Bharat",
+    missionBody: "We are committed to building a 'Pain-Free & Neuro-Resilient India.' By 2030, we aim to implement somatic literacy across every school and corporate space, ensuring a national workforce that is not just productive, but biologically regulated and trauma-informed.",
     foundationTitle: "Somatic Bharat Movement",
     foundationBody: "A non-profit entity dedicated to Social Research (TISRI) and Vocational Education (SIBS Academy). We exist to solve the 'Unresolved Pain Epidemic' through science, culture, and compassion."
   }
@@ -69,7 +69,7 @@ export const AboutUs = ({ lang = 'as' }) => {
         </View>
       </View>
 
-      {/* --- MISSION 2047 --- */}
+      {/* --- MISSION 2030 --- */}
       <View style={styles.missionSection}>
         <Text style={[styles.header, { color: '#C5A059' }]}>{t.missionTitle}</Text>
         <Text style={[styles.body, { color: '#FFF' }]}>{t.missionBody}</Text>

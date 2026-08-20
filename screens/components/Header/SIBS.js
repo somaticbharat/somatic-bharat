@@ -25,14 +25,14 @@ const translations = {
     courses: [
       {
         name: "Somatic Literacy Educator",
-        desc: "Targeting the 'Young Crowd' & Teachers to build national health resilience by 2047."
+        desc: "Targeting the 'Young Crowd' & Teachers to help educate and train a 100 million workforce by 2030."
       },
       {
         name: "Certified MSR Technician",
         desc: "Vocational training for BPT/MPT graduates in the Shatkona Neuro-Biological Reset."
       }
     ],
-    mission: "\"Creating a skilled, pain-free workforce for a Developed Bharat by 2047.\""
+    mission: "\"To educate and train a 100 million workforce, creating a skilled, pain-free foundation for a Developed Bharat by 2030.\""
   },
   as: {
     header: "SIBS একাডেমী",
@@ -57,14 +57,14 @@ const translations = {
     courses: [
       {
         name: "ছ’মেটিক লিটাৰেচি এডুকেটৰ",
-        desc: "২০৪৭ চনৰ ভিতৰত ৰাষ্ট্ৰীয় স্বাস্থ্য সজাগতা গঢ়ি তোলাৰ বাবে যুৱ প্ৰজন্ম আৰু শিক্ষকসকলক লক্ষ্য কৰি লোৱা হৈছে।"
+        desc: "২০৩০ চনৰ ভিতৰত ১০ কোটি কৰ্মশক্তি শিক্ষা আৰু প্ৰশিক্ষণ দিয়াৰ লক্ষ্যৰে যুৱ প্ৰজন্ম আৰু শিক্ষকসকলক প্ৰস্তুত কৰা।"
       },
       {
         name: "চাৰ্টিফাইড MSR টেকনিচিয়ান",
         desc: "ষটকোণ নিউৰ’-বায়’লজিকেল ৰিছেটত BPT/MPT স্নাতকসকলৰ বাবে বৃত্তিমূলক প্ৰশিক্ষণ।"
       }
     ],
-    mission: "\"২০৪৭ চনৰ ভিতৰত এখন উন্নত ভাৰতৰ বাবে দক্ষ আৰু বিষমুক্ত কৰ্মশক্তি সৃষ্টি কৰা।\""
+    mission: "\"২০৩০ চনৰ ভিতৰত ১০০ নিযুত কৰ্মশক্তিক শিক্ষা আৰু প্ৰশিক্ষণ প্ৰদান কৰি এখন উন্নত ভাৰতৰ বাবে দক্ষ আৰু বিষমুক্ত ভিত্তি সৃষ্টি কৰা।\""
   }
 };
 

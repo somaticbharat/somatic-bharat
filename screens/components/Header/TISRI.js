@@ -23,6 +23,18 @@ const translations = {
         text: "How generational stress impacts the nervous system’s pain threshold (Mission 2047 Vision).",
         link: "Read: Transgenerational Stress Legacy →",
         url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6322092/'
+      },
+      {
+        title: "Central Sensitization & Neural Plasticity",
+        text: "Clinical insights into central nervous system mechanisms underlying persistent, unexplained musculoskeletal pain syndromes.",
+        link: "Read PubMed Study 37325101 →",
+        url: 'https://pubmed.ncbi.nlm.nih.gov/37325101/'
+      },
+      {
+        title: "Work Productivity & Mental Health",
+        text: "An observational study from South India analyzing work productivity, absenteeism, and presenteeism in persons with common mental disorders.",
+        link: "Read PubMed Study on Work Productivity →",
+        url: 'https://pubmed.ncbi.nlm.nih.gov/37325101/'
       }
     ]
   },
@@ -47,13 +59,24 @@ const translations = {
         text: "বংশানুক্ৰমিক মানসিক চাপে কেনেকৈ স্নায়ুতন্ত্ৰৰ বিষ সহনশীলতাক প্ৰভাৱিত কৰে (মিছন ২০৪৭ ভিজন)।",
         link: "পঢ়ক: বংশানুক্ৰমিক মানসিক চাপৰ উত্তৰাধিকাৰ →",
         url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6322092/'
+      },
+      {
+        title: "চেণ্ট্ৰেল চেন্সিটাইজেচন আৰু নিউৰেল প্লাষ্টিচিটি",
+        text: "ব্যাখ্যাতীত দীৰ্ঘদিনীয়া মাংসপেশীৰ বিষৰ অন্তৰ্নিহিত কেন্দ্ৰীয় স্নায়ুতন্ত্ৰৰ কাৰিকৰী বিশ্লেষণ।",
+        link: "পঢ়ক পাবমেড অধ্যয়ন ৩৭ ২০২৩৫১০১ →",
+        url: 'https://pubmed.ncbi.nlm.nih.gov/37325101/'
+      },
+      {
+        title: "কৰ্মক্ষমতা আৰু মানসিক স্বাস্থ্য",
+        text: "দক্ষিণ ভাৰতৰ সাধাৰণ মানসিক বিকাৰগ্ৰস্ত ব্যক্তিসকলৰ কৰ্মক্ষমতা, অনুপস্থিতি আৰু কাৰ্যালয়ত উপস্থিত থাকিও কাম কৰিব নোৱাৰা অৱস্থাৰ ওপৰত এক পৰ্যবেক্ষণমূলক অধ্যয়ন।",
+        link: "পঢ়ক কৰ্মক্ষমতা সম্পৰ্কীয় পাবমেড অধ্যয়ন →",
+        url: 'https://pubmed.ncbi.nlm.nih.gov/37325101/'
       }
     ]
   }
 };
 
 export const TISRI = ({ lang }) => {
-  // Use the lang prop or default to English/Assamese
   const t = translations[lang] || translations.as;
   const openLink = (url) => Linking.openURL(url);
 
