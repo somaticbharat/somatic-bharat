@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Dimensions, SafeA
 import { LinearGradient } from 'expo-linear-gradient';
 
 // --- FIREBASE IMPORTS ---
-import { auth } from './firebaseConfig';
+import { auth } from './firebase';
 import { signOut } from 'firebase/auth';
 
 const { width } = Dimensions.get('window');
