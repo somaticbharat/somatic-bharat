@@ -56,7 +56,7 @@ export const AboutUs = ({ lang = 'as' }) => {
         {/* Founder Image & Credentials */}
         <View style={styles.founderCard}>
           <Image 
-            source={require('../../assets/dr-mp-das.png')} 
+            source={require('../../../assets/dr-mp-das.png')} 
             style={styles.founderImg} 
             resizeMode="cover" 
           />
