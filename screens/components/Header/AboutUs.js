@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 const translations = {
   as: {
     visionary: "প্ৰতিষ্ঠাপক",
-    founderName: "ডাঃ এম. পি. দাস টি,(BPT, LLB, RYT 500)",
+    founderName: "ডাঃ এম. পি. দাস পি.টি.,(BPT, LLB, RYT 500)",
     clinicalExp: "ক্লিনিকেল অভিজ্ঞতা @ NIMHANS | Apollo Blore",
     founderBody: "১২ বছৰৰো অধিক ক্লিনিকেল অভিজ্ঞতাৰ সৈতে (NIMHANS/Apollo), আমাৰ প্ৰতিষ্ঠাপকে ফিজিঅ’থেৰাপী, আইনী ওকালতি আৰু ছ’মেটিক জ্ঞানৰ মাজত এক নতুন যোগসূত্ৰ স্থাপন কৰিছে। তেখেতৰ যাত্ৰাই 'Uncut' সংযোগ আৱিষ্কাৰ কৰিছিল—য’ত সমাধান নোহোৱা অৱচেতন মনেই শৰীৰত 'অদৃশ্য জুই' বা দীৰ্ঘদিনীয়া বিষ হিচাপে প্ৰকাশ পায়।",
     shatkonaTitle: "ষটকোণ ৬-ভেক্টৰ মেপিং",

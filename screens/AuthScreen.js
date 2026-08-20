@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, ActivityIndicator, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { auth, db } from './firebase';
 import { 
@@ -14,13 +14,54 @@ const DEEP_BLUE = '#002147';
 const MATTE_GOLD = '#C5A059';
 const BG_CREAM = '#F9F8F4';
 
-export default function AuthScreen({ pendingScores, lang, onAuthSuccess }) {
+// --- TRANSLATION DICTIONARY ---
+const translations = {
+  en: {
+    brand: "SOMATIC BHARAT",
+    title: "Save Your Audit Results",
+    subtitle: "Secure your vector profile and unlock your personalized recovery pathway.",
+    googleBtn: "Continue with Google",
+    emailBtn: "Continue with Email & Password",
+    emailPlaceholder: "Email address",
+    passwordPlaceholder: "Password (min 6 characters)",
+    signUpBtn: "Create Account & View Results",
+    loginBtn: "Log In",
+    switchToLogin: "Already have an account? Log In",
+    switchToSignUp: "Need an account? Sign Up",
+    backMethod: "← Choose another sign-in method",
+    loaderText: "Processing securely...",
+    defaultError: "Please enter both email and password.",
+    firestoreError: "Failed to save audit results. Please try again."
+  },
+  as: {
+    brand: "ছ’মেটিক ভাৰত",
+    title: "আপোনাৰ অডিটৰ ফলাফলসমূহ সংৰক্ষণ কৰক",
+    subtitle: "আপোনাৰ ভেক্তৰ প্ৰফাইল সুৰক্ষিত কৰক আৰু আপোনাৰ নিজা পুনৰুদ্ধাৰৰ পথ উন্মুক্ত কৰক।",
+    googleBtn: "গুগলৰ জৰিয়তে আগবাঢ়ক",
+    emailBtn: "ইমেইল আৰু পাছৱৰ্ডৰ জৰিয়তে আগবাঢ়ক",
+    emailPlaceholder: "ইমেইল ঠিকনা",
+    passwordPlaceholder: "পাছৱৰ্ড (নূন্যতম ৬ টা আখৰ)",
+    signUpBtn: "একাউণ্ট সৃষ্টি কৰক আৰু ফলাফল চাওক",
+    loginBtn: "লগ ইন কৰক",
+    switchToLogin: "ইতিমধ্যে একাউণ্ট আছে নেকি? লগ ইন কৰক",
+    switchToSignUp: "একাউণ্ট প্ৰয়োজন নেকি? ছাইন আপ কৰক",
+    backMethod: "← আন এটা ছাইন-ইন পদ্ধতি বাছক",
+    loaderText: "সুৰক্ষিতভাৱে প্ৰক্ৰিয়া কৰা হৈছে...",
+    defaultError: "অনুগ্ৰহ কৰি ইমেইল আৰু পাছৱৰ্ড দুয়োটাই দিয়ক।",
+    firestoreError: "অডিট ফলাফল সংৰক্ষণ কৰাত ব্যৰ্থ হৈছে। পুনৰ চেষ্টা কৰক।"
+  }
+};
+
+export default function AuthScreen({ pendingScores, lang = 'en', onAuthSuccess }) {
   const [authMode, setAuthMode] = useState('select'); // 'select', 'email'
   const [isSignUp, setIsSignUp] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+
+  // Select translation dictionary based on lang prop (defaults to 'en')
+  const t = translations[lang] || translations.en;
 
   // 1. Google Sign-In
   const handleGoogleSignIn = async () => {
@@ -39,7 +80,7 @@ export default function AuthScreen({ pendingScores, lang, onAuthSuccess }) {
   // 2. Email / Password Auth
   const handleEmailAuth = async () => {
     if (!email || !password) {
-      setErrorMessage('Please enter both email and password.');
+      setErrorMessage(t.defaultError);
       return;
     }
     try {
@@ -71,7 +112,7 @@ export default function AuthScreen({ pendingScores, lang, onAuthSuccess }) {
       onAuthSuccess(pendingScores, uid);
     } catch (e) {
       console.error("Firestore Error:", e);
-      setErrorMessage("Failed to save audit results. Please try again.");
+      setErrorMessage(t.firestoreError);
       setLoading(false);
     }
   };
@@ -81,14 +122,12 @@ export default function AuthScreen({ pendingScores, lang, onAuthSuccess }) {
       <View style={styles.modalContainer}>
         {/* Brand Header */}
         <View style={styles.brandHeader}>
-          <Text style={styles.brandTitle}>SOMATIC BHARAT</Text>
+          <Text style={styles.brandTitle}>{t.brand}</Text>
           <View style={styles.goldDivider} />
         </View>
 
-        <Text style={styles.modalTitle}>Save Your Audit Results</Text>
-        <Text style={styles.modalSubtitle}>
-          Secure your vector profile and unlock your personalized recovery pathway.
-        </Text>
+        <Text style={styles.modalTitle}>{t.title}</Text>
+        <Text style={styles.modalSubtitle}>{t.subtitle}</Text>
 
         {errorMessage ? (
           <View style={styles.errorBox}>
@@ -99,7 +138,7 @@ export default function AuthScreen({ pendingScores, lang, onAuthSuccess }) {
         {loading ? (
           <View style={styles.loaderContainer}>
             <ActivityIndicator size="large" color={MATTE_GOLD} />
-            <Text style={styles.loaderText}>Processing securely...</Text>
+            <Text style={styles.loaderText}>{t.loaderText}</Text>
           </View>
         ) : (
           <>
@@ -107,12 +146,12 @@ export default function AuthScreen({ pendingScores, lang, onAuthSuccess }) {
               <View style={styles.btnGroup}>
                 <TouchableOpacity style={styles.googleBtn} onPress={handleGoogleSignIn}>
                   <MaterialCommunityIcons name="google" size={20} color="#DB4437" />
-                  <Text style={styles.googleBtnText}>Continue with Google</Text>
+                  <Text style={styles.googleBtnText}>{t.googleBtn}</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.emailBtn} onPress={() => setAuthMode('email')}>
                   <MaterialCommunityIcons name="email-outline" size={20} color={DEEP_BLUE} />
-                  <Text style={styles.emailBtnText}>Continue with Email & Password</Text>
+                  <Text style={styles.emailBtnText}>{t.emailBtn}</Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -120,7 +159,7 @@ export default function AuthScreen({ pendingScores, lang, onAuthSuccess }) {
             {authMode === 'email' && (
               <View style={styles.formGroup}>
                 <TextInput 
-                  placeholder="Email address" 
+                  placeholder={t.emailPlaceholder} 
                   placeholderTextColor="#999"
                   value={email} 
                   onChangeText={setEmail} 
@@ -129,7 +168,7 @@ export default function AuthScreen({ pendingScores, lang, onAuthSuccess }) {
                   keyboardType="email-address"
                 />
                 <TextInput 
-                  placeholder="Password (min 6 characters)" 
+                  placeholder={t.passwordPlaceholder} 
                   placeholderTextColor="#999"
                   value={password} 
                   onChangeText={setPassword} 
@@ -138,17 +177,17 @@ export default function AuthScreen({ pendingScores, lang, onAuthSuccess }) {
                 />
                 
                 <TouchableOpacity style={styles.submitBtn} onPress={handleEmailAuth}>
-                  <Text style={styles.submitBtnText}>{isSignUp ? "Create Account & View Results" : "Log In"}</Text>
+                  <Text style={styles.submitBtnText}>{isSignUp ? t.signUpBtn : t.loginBtn}</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => setIsSignUp(!isSignUp)} style={{ marginTop: 15 }}>
                   <Text style={styles.switchText}>
-                    {isSignUp ? "Already have an account? Log In" : "Need an account? Sign Up"}
+                    {isSignUp ? t.switchToLogin : t.switchToSignUp}
                   </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => setAuthMode('select')} style={styles.backLinkContainer}>
-                  <Text style={styles.backText}>← Choose another sign-in method</Text>
+                  <Text style={styles.backText}>{t.backMethod}</Text>
                 </TouchableOpacity>
               </View>
             )}

@@ -4,12 +4,20 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 // --- FIREBASE IMPORTS ---
 import { auth } from './firebase';
-import { signOut, signInWithPhoneNumber, RecaptchaVerifier } from 'firebase/auth';
+import { 
+  signOut, 
+  signInWithPhoneNumber, 
+  RecaptchaVerifier, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup 
+} from 'firebase/auth';
 
 const { width } = Dimensions.get('window');
 
 // --- MOOD-LIFTING BLUE TO WHITE VITALITY PALETTE ---
-const SKY_DEEP = '#00416A';       // Rich, grounding deep ocean blue
+const SKY_DEEP = '#00416A';      // Rich, grounding deep ocean blue
 const SKY_MID = '#0284C7';        // Vibrant, uplifting bright blue
 const SKY_LIGHT = '#E0F2FE';      // Airy soft cyan-tinted mist
 const PURE_WHITE = '#FFFFFF';     // Clean, breathable white
@@ -34,16 +42,15 @@ const TRANSLATIONS = {
 
     // Moderate / Low Load Translations
     modLoad: "Balanced patterns identified! You are in an ideal space to practice self-guided daily vagal toning and mindful fascia maintenance to keep your energy flowing smoothly.",
-    restoreTitleMod: "BUILD YOUR DAILY PRACTICE",
-    waitlistBtn: "JOIN APP LAUNCH WAITLIST",
-    waitlistSub: "Get Priority Access to Shatkona Life App & Masterclasses",
-
+    restoreTitleMod: "GUIDED VAGAL TONING & MAINTENANCE",
+    waitlistBtn: "JOIN SELF-GUIDED ACADEMY",
+    waitlistSub: "Access daily vagal exercises & fascia care modules",
+    
     // Action & Retake
     saveAndContinue: "SAVE RESULTS & PROCEED",
-    community: "JOIN MASTERCLASS COMMUNITY",
-    communitySub: "Connect with our Somatic Wellness Network",
-    retake: "LOGOUT",
-    loginTitle: "Phone OTP Authentication"
+    saveSubText: "Secure your score & access tailored options",
+    retake: "RETAKE AUDIT",
+    authHubTitle: "Authentication Hub"
   },
   as: {
     header: "ছ’মেটিক ভাইটেলিটি অডিট",
@@ -52,7 +59,7 @@ const TRANSLATIONS = {
     prescriptionTitle: "আপোনাৰ বাবে বিশেষ পৰামৰ্শ",
     
     // High Load Translations
-    highLoad:"আপোনাৰ শৰীৰত অত্যাধিক স্নায়ৱিক হেঁচা ধৰা পৰিছে। এই অৱস্থাৰ পৰা মুক্ত হ'বলৈ সঠিক চিকিৎসা আৰু চিকিৎসকৰ পোনপটীয়া পৰামৰ্শৰ প্ৰয়োজন।",
+    highLoad: "আপোনাৰ শৰীৰত অত্যাধিক স্নায়ৱিক হেঁচা ধৰা পৰিছে। এই অৱস্থাৰ পৰা মুক্ত হ'বলৈ সঠিক চিকিৎসা আৰু চিকিৎসকৰ পোনপটীয়া পৰামৰ্শৰ প্ৰয়োজন।",
     restoreTitleHigh: "চিকিৎসাৰ পৰামৰ্শ",
     teleconsultBtn: "অনলাইন টেলি-কনচাল্টেশ্যন",
     teleconsultSub: "ষটকোন লাইফৰ জৰিয়তে ১-অন-১ চেছন বুক কৰক",
@@ -61,16 +68,15 @@ const TRANSLATIONS = {
 
     // Moderate / Low Load Translations
     modLoad: "মধ্যমীয়াৰ পৰা নূন্যতম স্নায়ৱিক হেঁচা চিনাক্ত কৰা হৈছে। দৈনন্দিন ফেচিয়া ৰিলিজ আৰু স্ব-পৰিচৰ্যাৰ বাবে আপুনি উপযুক্ত।",
-    restoreTitleMod: "দৈনন্দিন অভ্যাস গঢ়ি তুলক",
-    waitlistBtn: "এপ মুকলিৰ ৱেইটলিষ্টত যোগ দিয়ক",
-    waitlistSub: "ষটকোন লাইফ এপৰ প্ৰথম সুবিধা লাভ কৰক",
-
+    restoreTitleMod: "স্বাভাৱিক ফেচিয়া ৰিলিজ আৰু স্ব-পৰিচৰ্যা",
+    waitlistBtn: "স্ব-নিৰ্দেশিত একাডেমীত যোগদান কৰক",
+    waitlistSub: "দৈনন্দিন ব্যায়াম আৰু ফেচিয়া কেয়াৰ মডিউলসমূহ লাভ কৰক",
+    
     // Action & Retake
     saveAndContinue: "ফলাফল সংৰক্ষণ কৰক",
-    community: "মাষ্টাৰক্লাচ কমিউনিটিত যোগদান কৰক",
-    communitySub: "ছ’মেটিক ৱেলনেচ নেটৱৰ্কৰ সৈতে সংলগ্ন হওক",
-    retake: "লগআউট",
-    loginTitle: "ফোন ও.টি.পি. লগইন"
+    saveSubText: "আপোনাৰ স্ক’ৰ সুৰক্ষিত কৰক আৰু পৰামৰ্শ লাভ কৰক",
+    retake: "অডিট পুনৰ আৰম্ভ কৰক",
+    authHubTitle: "প্ৰমাণীকৰণ হাব"
   }
 };
 
@@ -79,15 +85,23 @@ export default function ResultScreen({ scores, onSaveTrigger, onReset, lang: par
   const currentLang = parentLang || localLang;
   const t = TRANSLATIONS[currentLang];
 
-  // OTP Login Modal States
-  const [otpModalVisible, setOtpModalVisible] = useState(false);
+  // Auth Hub Modal States
+  const [authModalVisible, setAuthModalVisible] = useState(false);
+  const [authTab, setAuthTab] = useState('email');
+
+  // Email / Password States
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isSignUpMode, setIsSignUpMode] = useState(false);
+
+  // Phone OTP States
   const [phoneNumber, setPhoneNumber] = useState('');
   const [otpCode, setOtpCode] = useState('');
   const [confirmResult, setConfirmResult] = useState(null);
 
   // Setup Recaptcha Verifier for Web/Firebase Auth
   useEffect(() => {
-    if (otpModalVisible && !window.recaptchaVerifier) {
+    if (authModalVisible && authTab === 'otp' && !window.recaptchaVerifier) {
       try {
         window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container-result', {
           size: 'invisible',
@@ -98,13 +112,14 @@ export default function ResultScreen({ scores, onSaveTrigger, onReset, lang: par
         console.log("Recaptcha init error:", e);
       }
     }
-  }, [otpModalVisible]);
+  }, [authModalVisible, authTab]);
 
   const handleLangToggle = () => {
+    const nextLang = currentLang === 'en' ? 'as' : 'en';
     if (parentSetLang) {
-      parentSetLang();
+      parentSetLang(nextLang); // ✅ Passes the explicit target language upstream
     } else {
-      setLocalLang(prev => (prev === 'en' ? 'as' : 'en'));
+      setLocalLang(nextLang); // Fallback if rendered independently
     }
   };
 
@@ -117,6 +132,42 @@ export default function ResultScreen({ scores, onSaveTrigger, onReset, lang: par
       }
     } catch (error) {
       Alert.alert("Error", error.message);
+    }
+  };
+
+  // --- EMAIL / PASSWORD AUTH ---
+  const handleEmailAuth = async () => {
+    if (!email || !password) {
+      Alert.alert("Error", "Please enter both email and password.");
+      return;
+    }
+    try {
+      if (isSignUpMode) {
+        await createUserWithEmailAndPassword(auth, email, password);
+        Alert.alert("Success", "Account created successfully!");
+      } else {
+        await signInWithEmailAndPassword(auth, email, password);
+        Alert.alert("Success", "Logged in successfully!");
+      }
+      setAuthModalVisible(false);
+      setEmail('');
+      setPassword('');
+      if (onSaveTrigger) onSaveTrigger();
+    } catch (error) {
+      Alert.alert("Authentication Error", error.message);
+    }
+  };
+
+  // --- GOOGLE SIGN-IN ---
+  const handleGoogleLogin = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+      Alert.alert("Success", "Logged in with Gmail successfully!");
+      setAuthModalVisible(false);
+      if (onSaveTrigger) onSaveTrigger();
+    } catch (error) {
+      Alert.alert("Google Sign-In Error", error.message);
     }
   };
 
@@ -150,10 +201,11 @@ export default function ResultScreen({ scores, onSaveTrigger, onReset, lang: par
     try {
       await confirmResult.confirm(otpCode);
       Alert.alert("Success", "Phone verified and logged in successfully!");
-      setOtpModalVisible(false);
+      setAuthModalVisible(false);
       setConfirmResult(null);
       setPhoneNumber('');
       setOtpCode('');
+      if (onSaveTrigger) onSaveTrigger();
     } catch (error) {
       Alert.alert("Verification Failed", error.message);
     }
@@ -229,21 +281,16 @@ export default function ResultScreen({ scores, onSaveTrigger, onReset, lang: par
             </View>
           </View>
 
-          {/* PRIMARY CALL TO ACTION BUTTON */}
-          <TouchableOpacity style={styles.communityBtn} onPress={onSaveTrigger} activeOpacity={0.9}>
+          {/* PRIMARY CALL TO ACTION BUTTON WITH MULTI-AUTH TRIGGER */}
+          <TouchableOpacity style={styles.communityBtn} onPress={() => setAuthModalVisible(true)} activeOpacity={0.9}>
             <LinearGradient 
               colors={[SKY_MID, SKY_DEEP]} 
               start={{x: 0, y: 0}} end={{x: 1, y: 0}} 
               style={styles.gradientBtn}
             >
               <Text style={styles.communityBtnText}>{t.saveAndContinue}</Text>
-              <Text style={styles.communitySubText}>Secure your score & access tailored options</Text>
+              <Text style={styles.communitySubText}>{t.saveSubText}</Text>
             </LinearGradient>
-          </TouchableOpacity>
-
-          {/* PHONE OTP LOGIN TRIGGER */}
-          <TouchableOpacity onPress={() => setOtpModalVisible(true)} style={styles.otpTriggerBtn}>
-            <Text style={styles.otpTriggerText}>Login via Phone OTP</Text>
           </TouchableOpacity>
 
           {/* LOGOUT / RETAKE ACTION */}
@@ -253,45 +300,107 @@ export default function ResultScreen({ scores, onSaveTrigger, onReset, lang: par
 
         </ScrollView>
 
-        {/* --- PHONE OTP MODAL --- */}
-        <Modal visible={otpModalVisible} transparent animationType="slide">
+        {/* --- MULTI-AUTH LOGIN / SIGNUP MODAL --- */}
+        <Modal visible={authModalVisible} transparent animationType="slide">
           <View style={styles.modalOverlay}>
             <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>{t.loginTitle}</Text>
+              <Text style={styles.modalTitle}>{t.authHubTitle}</Text>
               
-              {!confirmResult ? (
-                <View style={{ width: '100%', alignItems: 'center' }}>
+              <View style={styles.authTabRow}>
+                <TouchableOpacity 
+                  style={[styles.authTabBtn, authTab === 'email' && styles.authTabBtnActive]} 
+                  onPress={() => setAuthTab('email')}
+                >
+                  <Text style={[styles.authTabText, authTab === 'email' && styles.authTabTextActive]}>Email / PW</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                  style={[styles.authTabBtn, authTab === 'otp' && styles.authTabBtnActive]} 
+                  onPress={() => setAuthTab('otp')}
+                >
+                  <Text style={[styles.authTabText, authTab === 'otp' && styles.authTabTextActive]}>Phone OTP</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                  style={[styles.authTabBtn, authTab === 'google' && styles.authTabBtnActive]} 
+                  onPress={() => { setAuthTab('google'); handleGoogleLogin(); }}
+                >
+                  <Text style={[styles.authTabText, authTab === 'google' && styles.authTabTextActive]}>Gmail</Text>
+                </TouchableOpacity>
+              </View>
+
+              {authTab === 'email' && (
+                <View style={{ width: '100%' }}>
                   <TextInput 
                     style={styles.input} 
-                    placeholder="Phone Number (+91...)" 
+                    placeholder="Email Address" 
                     placeholderTextColor="#888" 
-                    keyboardType="phone-pad"
-                    value={phoneNumber} 
-                    onChangeText={setPhoneNumber} 
+                    autoCapitalize="none"
+                    value={email} 
+                    onChangeText={setEmail} 
                   />
-                  <View nativeID="recaptcha-container-result" style={{ marginVertical: 5 }} />
-                  <TouchableOpacity style={styles.modalBtn} onPress={handleSendOTP}>
-                    <Text style={styles.modalBtnText}>Send OTP</Text>
+                  <TextInput 
+                    style={styles.input} 
+                    placeholder="Password" 
+                    placeholderTextColor="#888" 
+                    secureTextEntry 
+                    value={password} 
+                    onChangeText={setPassword} 
+                  />
+                  <TouchableOpacity style={styles.modalBtn} onPress={handleEmailAuth}>
+                    <Text style={styles.modalBtnText}>{isSignUpMode ? "Sign Up" : "Login & Save"}</Text>
                   </TouchableOpacity>
-                </View>
-              ) : (
-                <View style={{ width: '100%', alignItems: 'center' }}>
-                  <TextInput 
-                    style={styles.input} 
-                    placeholder="Enter 6-digit OTP" 
-                    placeholderTextColor="#888" 
-                    keyboardType="number-pad"
-                    maxLength={6}
-                    value={otpCode} 
-                    onChangeText={setOtpCode} 
-                  />
-                  <TouchableOpacity style={styles.modalBtn} onPress={handleVerifyOTP}>
-                    <Text style={styles.modalBtnText}>Verify OTP & Login</Text>
+                  <TouchableOpacity onPress={() => setIsSignUpMode(!isSignUpMode)}>
+                    <Text style={styles.switchModeText}>
+                      {isSignUpMode ? "Already have an account? Login" : "Don't have an account? Sign Up"}
+                    </Text>
                   </TouchableOpacity>
                 </View>
               )}
 
-              <TouchableOpacity onPress={() => { setOtpModalVisible(false); setConfirmResult(null); }}>
+              {authTab === 'otp' && (
+                <View style={{ width: '100%', alignItems: 'center' }}>
+                  {!confirmResult ? (
+                    <>
+                      <TextInput 
+                        style={styles.input} 
+                        placeholder="Phone Number (+91...)" 
+                        placeholderTextColor="#888" 
+                        keyboardType="phone-pad"
+                        value={phoneNumber} 
+                        onChangeText={setPhoneNumber} 
+                      />
+                      <View id="recaptcha-container-result" style={{ marginVertical: 5 }} />
+                      <TouchableOpacity style={styles.modalBtn} onPress={handleSendOTP}>
+                        <Text style={styles.modalBtnText}>Send OTP</Text>
+                      </TouchableOpacity>
+                    </>
+                  ) : (
+                    <>
+                      <TextInput 
+                        style={styles.input} 
+                        placeholder="Enter 6-digit OTP" 
+                        placeholderTextColor="#888" 
+                        keyboardType="number-pad"
+                        maxLength={6}
+                        value={otpCode} 
+                        onChangeText={setOtpCode} 
+                      />
+                      <TouchableOpacity style={styles.modalBtn} onPress={handleVerifyOTP}>
+                        <Text style={styles.modalBtnText}>Verify OTP & Save</Text>
+                      </TouchableOpacity>
+                    </>
+                  )}
+                </View>
+              )}
+
+              {authTab === 'google' && (
+                <View style={{ width: '100%', alignItems: 'center', paddingVertical: 15 }}>
+                  <TouchableOpacity style={[styles.modalBtn, { backgroundColor: '#DB4437' }]} onPress={handleGoogleLogin}>
+                    <Text style={styles.modalBtnText}>Continue with Google</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+
+              <TouchableOpacity onPress={() => { setAuthModalVisible(false); setConfirmResult(null); }}>
                 <Text style={styles.cancelText}>Cancel</Text>
               </TouchableOpacity>
             </View>
@@ -328,15 +437,19 @@ const styles = StyleSheet.create({
   gradientBtn: { paddingVertical: 20, paddingHorizontal: 20, alignItems: 'center' },
   communityBtnText: { color: PURE_WHITE, fontWeight: '900', fontSize: 12, letterSpacing: 1.5, textAlign: 'center' },
   communitySubText: { color: PURE_WHITE, fontSize: 9, marginTop: 6, fontWeight: '600', opacity: 0.85, letterSpacing: 0.5 },
-  otpTriggerBtn: { marginTop: 25, paddingVertical: 10, alignItems: 'center' },
-  otpTriggerText: { color: SKY_DEEP, fontSize: 11, fontWeight: '800', letterSpacing: 1, textDecorationLine: 'underline' },
   resetBtn: { marginTop: 15, paddingBottom: 20, alignItems: 'center' },
   resetText: { color: TEXT_MUTED, fontSize: 11, fontWeight: '800', letterSpacing: 1.5 },
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },
   modalContent: { width: '85%', backgroundColor: '#FFF', padding: 25, borderRadius: 15, alignItems: 'center' },
   modalTitle: { fontSize: 16, fontWeight: '900', color: SKY_DEEP, marginBottom: 15 },
+  authTabRow: { flexDirection: 'row', width: '100%', marginBottom: 15, borderWidth: 1, borderColor: SKY_DEEP, borderRadius: 8, overflow: 'hidden' },
+  authTabBtn: { flex: 1, paddingVertical: 8, alignItems: 'center', backgroundColor: '#FFF' },
+  authTabBtnActive: { backgroundColor: SKY_DEEP },
+  authTabText: { fontSize: 11, fontWeight: 'bold', color: SKY_DEEP },
+  authTabTextActive: { color: PURE_WHITE },
   input: { width: '100%', borderWidth: 1, borderColor: '#DDD', padding: 12, borderRadius: 8, marginBottom: 12, fontSize: 12, backgroundColor: PURE_WHITE },
   modalBtn: { backgroundColor: SKY_DEEP, width: '100%', padding: 14, borderRadius: 8, alignItems: 'center', marginTop: 5 },
   modalBtnText: { color: '#FFF', fontWeight: 'bold', fontSize: 12 },
+  switchModeText: { color: SKY_DEEP, marginTop: 12, fontSize: 11, fontWeight: 'bold', textAlign: 'center' },
   cancelText: { color: '#888', marginTop: 15, fontSize: 11, fontWeight: 'bold' }
 });

@@ -7,6 +7,7 @@ const MATTE_GOLD = '#C5A059';
 
 const TRANSLATIONS = {
   en: {
+    disclaimer: "Disclaimer: This somatic audit is for educational and self-awareness purposes only and does not constitute medical diagnosis or clinical treatment.",
     step: "STEP",
     vector: "VECTOR",
     back: "BACK",
@@ -19,6 +20,7 @@ const TRANSLATIONS = {
     ]
   },
   as: {
+    disclaimer: "স্বীকাৰোক্তি: এই ছ’মেটিক অডিট কেৱল শিক্ষা আৰু আত্ম-সজাগতাৰ বাবে প্ৰস্তুত কৰা হৈছে; ই কোনো চিকিৎসা নিদান বা পেছাদাৰী চিকিৎসা সেৱা নহয়।",
     step: "পদক্ষেপ",
     vector: "ভেক্টৰ",
     back: "পাছলৈ",
@@ -55,7 +57,7 @@ const QUESTIONS = [
   { v: 'NEURAL', en: "Do you experience a severe lack of physical energy and heavy morning lethargy that makes initiating movement feel physically monumental?", as: "আপুনি শাৰীৰিক শক্তিৰ তীব্ৰ অভাৱ আৰু ৰাতিপুৱা এনে এক এলেহুৱা ভাব অনুভৱ কৰে নেকি যাৰ বাবে লৰচৰ কৰাটোও এক ডাঙৰ কাম যেন লাগে?" },
   { v: 'NEURAL', en: "Do you spend more than six to seven hours a day locked in a stagnant, sedentary sitting position at a desk or keyboard?", as: "আপুনি দিনটোত ছয়-সাত ঘণ্টাতকৈ অধিক সময় ডেক্স বা কম্পিউটাৰৰ সন্মুখত একেৰাহে বহাৰ অভ্যাস আছে নেকি?" },
   { v: 'NEURAL', en: "Do you work in a highly repetitive, high-focus profession where it feels like your brain has forgotten how to voluntarily relax specific muscle groups?", as: "আপুনি এনে এক উচ্চ-মনোযোগৰ কাম কৰে নেকি য’ত আপোনাৰ মগজুৱে পেশীবোৰক স্বাভাৱিকভাৱে শিথিল বা ৰিলেক্স কৰিবলৈ পাহৰি যোৱা যেন লাগে?" },
-  { v: 'NEURAL', en: "Do you maintain exceptionally rigid, non-negotiable standards for your own performance, constantly feeling deep physical anxiety or muscle locking if things aren't perfect?", as: "আপুনি নিজৰ কাম-কাজত অতি উচ্চ মানদণ্ড বজাই ৰাখিবলৈ বিচাৰে নেকি, যাৰ ফলত কামবোৰ নিখুঁত নহ’লে শৰীৰত চাপ বা পেশী জঠৰ হৈ পৰা অনুভৱ কৰে?" },
+  { v: 'NEURAL', en: "Do you maintain exceptionally rigid, non-negotiable standards for your own performance, constantly feeling deep physical anxiety or muscle locking if things aren't perfect?", as: "আপুনি নিজৰ কাম-কাজত অতি উচ্চ মানদণ্ড বজাই ৰাখিবলৈ বিচাৰে নেকি, যাৰ ফলত কামবোৰ নিখুঁত নহ’লে শৰীৰত চাপ বা পেশী জঠৰ হৈ পৰা অনুভৱ কৰে নেকি?" },
 
   // ATMOSPHERIC VECTOR
   { v: 'ATMOSPHERIC', en: "Is your daily lifestyle characterized by a lack of dietary protein combined with an absence of structured physical resistance exercise?", as: "আপোনাৰ দৈনিক জীৱনশৈলীত প্ৰ’টিনযুক্ত খাদ্যৰ অভাৱ আৰু সঠিক শাৰীৰিক ব্যায়ামৰ অভাৱ আছে নেকি?" },
@@ -82,7 +84,7 @@ const QUESTIONS = [
   { v: 'HUMORAL', en: "Do you feel a profound baseline loss of physical restoration, where your body feels as though it is constantly running on empty?", as: "আপোনাৰ শৰীৰটো সদায় শক্তিহীন হৈ থকা যেন লাগে নেকি, যেন কোনো পুনৰুদ্ধাৰেই শৰীৰটোক শক্তি দিব পৰা নাই?" }
 ];
 
-export default function AuditScreen({ onComplete, onExit, lang, setLang }) {
+export default function AuditScreen({ onComplete, onExit, lang = 'en', setLang }) {
   const [current, setCurrent] = useState(0);
   const [history, setHistory] = useState([]); 
   const [scores, setScores] = useState({ 
@@ -90,7 +92,7 @@ export default function AuditScreen({ onComplete, onExit, lang, setLang }) {
     ATMOSPHERIC: 0, STRUCTURAL: 0, HUMORAL: 0 
   });
 
-  const t = TRANSLATIONS[lang];
+  const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
 
   const handleAnswer = (val) => {
     const vector = QUESTIONS[current].v;
@@ -101,7 +103,6 @@ export default function AuditScreen({ onComplete, onExit, lang, setLang }) {
       setScores(newScores);
       setCurrent(current + 1);
     } else {
-      // Pass final scores to parent App.js to display the Result Screen locally first
       onComplete(newScores); 
     }
   };
@@ -126,6 +127,12 @@ export default function AuditScreen({ onComplete, onExit, lang, setLang }) {
     }
   };
 
+  const toggleLanguage = () => {
+    if (setLang) {
+      setLang(lang === 'en' ? 'as' : 'en');
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       {/* HEADER CONTROLS */}
@@ -140,13 +147,18 @@ export default function AuditScreen({ onComplete, onExit, lang, setLang }) {
 
         <TouchableOpacity 
           style={styles.langToggle} 
-          onPress={setLang}
+          onPress={toggleLanguage}
         >
           <Text style={styles.langToggleText}>{lang === 'en' ? 'অসমীয়া' : 'ENGLISH'}</Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.header}>
+        {/* DISCLAIMER BANNER */}
+        <View style={styles.disclaimerBox}>
+          <Text style={styles.disclaimerText}>{t.disclaimer}</Text>
+        </View>
+
         <TouchableOpacity style={styles.backBtn} onPress={handleBack}>
           <MaterialCommunityIcons name="arrow-left" size={20} color={MATTE_GOLD} />
           <Text style={styles.backBtnText}>{t.back}</Text>
@@ -189,9 +201,25 @@ const styles = StyleSheet.create({
   langToggle: { backgroundColor: MATTE_GOLD, paddingVertical: 8, paddingHorizontal: 12, borderRadius: 20 },
   langToggleText: { color: DEEP_BLUE, fontWeight: '900', fontSize: 10 },
   header: { padding: 20, borderBottomWidth: 1, borderColor: '#EEE', alignItems: 'center' },
-  backBtn: { position: 'absolute', left: 20, top: 20, flexDirection: 'row', alignItems: 'center' },
+  disclaimerBox: {
+    backgroundColor: '#FFF3CD',
+    borderColor: '#FFEEBA',
+    borderWidth: 1,
+    padding: 8,
+    borderRadius: 6,
+    marginBottom: 15,
+    width: '100%'
+  },
+  disclaimerText: {
+    fontSize: 9,
+    color: '#856404',
+    textAlign: 'center',
+    fontWeight: '600',
+    lineHeight: 13,
+  },
+  backBtn: { position: 'absolute', left: 20, top: 75, flexDirection: 'row', alignItems: 'center' },
   backBtnText: { color: MATTE_GOLD, fontSize: 12, fontWeight: 'bold', marginLeft: 5 },
-  progressText: { color: MATTE_GOLD, fontWeight: '900', fontSize: 11, letterSpacing: 1.5 },
+  progressText: { color: MATTE_GOLD, fontWeight: '900', fontSize: 11, letterSpacing: 1.5, marginTop: 5 },
   stepText: { color: '#999', fontSize: 10, marginTop: 4, fontWeight: '600' },
   progressBar: { height: 4, width: '100%', backgroundColor: '#EEE', marginTop: 15, borderRadius: 2, overflow: 'hidden' },
   progressFill: { height: '100%', backgroundColor: '#004D40' },

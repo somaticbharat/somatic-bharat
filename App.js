@@ -3,8 +3,8 @@ import { SafeAreaView } from 'react-native';
 
 import HomeScreen from './screens/HomeScreen';
 import AuditScreen from './screens/AuditScreen';
-import ResultScreen from './screens/ResultScreen';       // Step 1: Shown right after 36 questions
-import AuthScreen from './screens/AuthScreen';           // Step 2: Triggered to save scores & sign in
+import ResultScreen from './screens/ResultScreen';      // Step 1: Shown right after 36 questions
+import AuthScreen from './screens/AuthScreen';          // Step 2: Triggered to save scores & sign in
 import DestinationScreen from './screens/DestinationScreen'; // Step 3: Final routed outcome
 
 export default function App() {
@@ -87,6 +87,7 @@ export default function App() {
           scores={auditResults} 
           onSaveTrigger={handleProceedToAuth} 
           lang={lang} 
+          setLang={toggleLang} 
         />
       )}
 
@@ -95,6 +96,7 @@ export default function App() {
         <AuthScreen 
           pendingScores={auditResults} 
           lang={lang}
+          setLang={toggleLang}
           onAuthSuccess={handleAuthSuccess} 
         />
       )}
@@ -104,6 +106,8 @@ export default function App() {
         <DestinationScreen 
           destination={userRoute} 
           scores={auditResults} 
+          lang={lang}
+          setLang={toggleLang}
           onReset={resetApp} 
         />
       )}

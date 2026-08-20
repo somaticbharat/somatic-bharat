@@ -49,7 +49,6 @@ const translations = {
     login: "LOGIN / AUTH",
     logout: "LOGOUT",
     auditBtn: "START SOMATIC AUDIT",
-    volunteerBtn: "JOIN MISSION 2030 AS VOLUNTEER",
     heroText: "The MRI says you're fine. Blood reports are 'normal'. All treatments failed? Called just in your head? But your body is imploring, seeking deliverance from the pain. Then don't worry anymore. The fatigue, the brain fog, the moving pain—it's not in your head. It's an invisible fire called ",
     heroHighlight: "Central Sensitization—the hidden root behind conditions like Fibromyalgia.",
     ctaHero: "Discover yourself with the 3-min SOMATIC audit",
@@ -82,7 +81,6 @@ const translations = {
     login: "লগ-ইন / অথ",
     logout: "লগ-আউট",
     auditBtn: "ছ’মেটিক অডিট আৰম্ভ কৰক",
-    volunteerBtn: "স্বেচ্ছাসেৱক হিচাপে মিছন ২০৩০-ত যোগ দিয়ক",
     heroText: "আপুনিও এই সমস্যাৰ ভুক্তভোগী নেকি? MRI ৰিপৰ্ট ঠিক আছে। তেজৰ পৰীক্ষাও 'স্বাভাৱিক'। সকলো ধৰণৰ চিকিৎসা কৰিও বিফল হৈছে আৰু এই বিষক মনৰ ধাৰণা বুলি কোৱা হৈছে? তেনেহ’লে আৰু চিন্তা নকৰিব। সেই ভাগৰ, মগজুৰ ধুঁৱলী-কুঁৱলী ভাব আৰু শৰীৰৰ যন্ত্ৰণা... এইয়া আপোনাৰ মনৰ ভুল নহয়। এইয়া এক অদৃশ্য জুই যাক কোৱা হয় ",
     heroHighlight: "চেণ্ট্ৰেল চেন্সিটাইজেচন— যি ফাইব্ৰ’মায়েলজিয়াৰ দৰে যন্ত্ৰণাৰ আঁৰত লুকাই থকা এক গোপন কাৰণ।",
     ctaHero: "৩-মিনিটৰ ছ’মেটিক অডিটৰ জৰিয়তে নিজক আৱিষ্কাৰ কৰক",
@@ -110,7 +108,7 @@ const translations = {
 };
 
 export default function HomeScreen({ onStart, lang, setLang }) {
-  const t = translations[lang] || translations.as;
+  const t = translations[lang] || translations.en;
   const scrollRef = useRef(null);
   const [activePage, setActivePage] = useState('HOME');
   const [user, setUser] = useState(null); 
@@ -527,14 +525,29 @@ const styles = StyleSheet.create({
   pageWrapper: { padding: 20, backgroundColor: '#FFF' },
   
   // HERO STYLES (ENLARGED TEXT & NO FOUNDER PIC)
+ // HERO STYLES (ENLARGED & PROMINENT AUDIT CALLOUT)
   hero: { padding: 30, alignItems: 'center', backgroundColor: '#FFF' },
-  hook: { fontSize: 18, textAlign: 'center', lineHeight: 30, color: DEEP_BLUE, marginBottom: 25, fontWeight: '600' },
+  hook: { fontSize: 18, textAlign: 'center', lineHeight: 30, color: DEEP_BLUE, marginBottom: 30, fontWeight: '600' },
   
   heroActions: { width: '100%', alignItems: 'center' },
-  heroCta: { backgroundColor: DEEP_BLUE, width: '85%', paddingVertical: 16, borderRadius: 35, elevation: 8, alignItems: 'center' },
-  heroCtaText: { color: '#FFF', fontWeight: '900', fontSize: 13, letterSpacing: 1 },
-  dnaSubText: { fontSize: 11, color: '#666', marginTop: 12, fontWeight: '700', textAlign: 'center' },
-  
+  heroCta: { 
+    backgroundColor: DEEP_BLUE, 
+    width: '100%', 
+    maxWidth: 600, 
+    paddingVertical: 22, 
+    paddingHorizontal: 25,
+    borderRadius: 16, 
+    elevation: 12, 
+    shadowColor: DEEP_BLUE,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    alignItems: 'center', 
+    borderWidth: 2,
+    borderColor: MATTE_GOLD 
+  },
+  heroCtaText: { color: MATTE_GOLD, fontWeight: '900', fontSize: 16, letterSpacing: 1.5, textAlign: 'center' },
+  dnaSubText: { fontSize: 11, color: '#666', marginTop: 15, fontWeight: '700', textAlign: 'center' },
   gridSection: { paddingHorizontal: 20 },
   sectionLabel: { fontSize: 10, fontWeight: 'bold', color: MATTE_GOLD, letterSpacing: 2, textAlign: 'center', marginBottom: 10 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginTop: 10 },
