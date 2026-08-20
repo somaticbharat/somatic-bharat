@@ -15,7 +15,15 @@ import {
 
 // --- FIREBASE IMPORTS ---
 import { auth, db } from './firebase';
-import { signInWithPhoneNumber, RecaptchaVerifier, signOut } from 'firebase/auth';
+import { 
+  signInWithPhoneNumber, 
+  RecaptchaVerifier, 
+  signOut, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup 
+} from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 
 import { AboutUs } from './components/Header/AboutUs';
@@ -38,7 +46,7 @@ const translations = {
     nav: ["ABOUT", "TISRI", "SIBS ACADEMY", "WORKSHOPS", "CAREER", "REVIEWS"],
     back: "← BACK TO HOME",
     tagline: "Building a Neuro-Resilient India",
-    login: "LOGIN / OTP",
+    login: "LOGIN / AUTH",
     logout: "LOGOUT",
     auditBtn: "START SOMATIC AUDIT",
     volunteerBtn: "JOIN MISSION 2030 AS VOLUNTEER",
@@ -74,7 +82,7 @@ const translations = {
     nav: ["আমাৰ বিষয়ে", "TISRI গৱেষণা", "SIBS একাডেমী", "কৰ্মশালা", "কেৰিয়াৰ", "মতামত"],
     back: "← পাছলৈ যাওক",
     tagline: "এক সুদৃঢ় স্নায়ৱিক ভাৰতীয় সমাজ গঠনৰ যাত্ৰা",
-    login: "লগ-ইন / অ’ টি পি",
+    login: "লগ-ইন / অথ",
     logout: "লগ-আউট",
     auditBtn: "ছ’মেটিক অডিট আৰম্ভ কৰক",
     volunteerBtn: "স্বেচ্ছাসেৱক হিচাপে মিছন ২০৩০-ত যোগ দিয়ক",
@@ -117,6 +125,14 @@ export default function HomeScreen({ onStart, lang, setLang }) {
   const [loginModalVisible, setLoginModalVisible] = useState(false);
   const [volunteerModalVisible, setVolunteerModalVisible] = useState(false);
   
+  // Auth Tab Selection ('otp', 'email', 'google')
+  const [authTab, setAuthTab] = useState('email');
+
+  // Email / Password States
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isSignUpMode, setIsSignUpMode] = useState(false);
+
   // Phone OTP States
   const [phoneNumber, setPhoneNumber] = useState('');
   const [otpCode, setOtpCode] = useState('');
@@ -129,22 +145,55 @@ export default function HomeScreen({ onStart, lang, setLang }) {
 
   // --- SETUP RECAPTCHA VERIFIER FOR WEB ---
   useEffect(() => {
-    if (loginModalVisible && !window.recaptchaVerifier) {
+    if (loginModalVisible && authTab === 'otp' && !window.recaptchaVerifier) {
       try {
         window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
           size: 'invisible',
-          callback: (response) => {
-            // reCAPTCHA solved successfully
-          },
-          'expired-callback': () => {
-            // Response expired, reset if needed
-          }
+          callback: (response) => {},
+          'expired-callback': () => {}
         });
       } catch (e) {
         console.log("Recaptcha initialization error:", e);
       }
     }
-  }, [loginModalVisible]);
+  }, [loginModalVisible, authTab]);
+
+  // --- EMAIL / PASSWORD AUTH ---
+  const handleEmailAuth = async () => {
+    if (!email || !password) {
+      Alert.alert("Error", "Please enter both email and password.");
+      return;
+    }
+    try {
+      if (isSignUpMode) {
+        const userCred = await createUserWithEmailAndPassword(auth, email, password);
+        setUser(userCred.user);
+        Alert.alert("Success", "Account created successfully!");
+      } else {
+        const userCred = await signInWithEmailAndPassword(auth, email, password);
+        setUser(userCred.user);
+        Alert.alert("Success", "Logged in successfully!");
+      }
+      setLoginModalVisible(false);
+      setEmail('');
+      setPassword('');
+    } catch (error) {
+      Alert.alert("Authentication Error", error.message);
+    }
+  };
+
+  // --- GOOGLE SIGN-IN ---
+  const handleGoogleLogin = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      setUser(result.user);
+      Alert.alert("Success", "Logged in with Gmail successfully!");
+      setLoginModalVisible(false);
+    } catch (error) {
+      Alert.alert("Google Sign-In Error", error.message);
+    }
+  };
 
   // --- SEND OTP ---
   const handleSendOTP = async () => {
@@ -159,7 +208,6 @@ export default function HomeScreen({ onStart, lang, setLang }) {
       Alert.alert("OTP Sent", "Check your phone for the verification code.");
     } catch (error) {
       Alert.alert("OTP Error", error.message);
-      // Reset reCAPTCHA if send fails
       if (window.recaptchaVerifier) {
         window.recaptchaVerifier.render().then((widgetId) => {
           window.grecaptcha.reset(widgetId);
@@ -331,7 +379,7 @@ export default function HomeScreen({ onStart, lang, setLang }) {
         </View>
 
         <View style={styles.footer}>
-          <Text style={styles.footerLogo}>{t.brand} MOVE</Text>
+          <Text style={styles.footerLogo}>{t.brand} </Text>
           <TouchableOpacity style={styles.missionBox} onPress={() => setVolunteerModalVisible(true)}>
             <Text style={styles.footerMission}>{t.mission}</Text>
             <Text style={styles.missionSub}>{t.missionSub}</Text>
@@ -341,45 +389,108 @@ export default function HomeScreen({ onStart, lang, setLang }) {
         </View>
       </ScrollView>
 
-      {/* --- PHONE OTP LOGIN MODAL --- */}
+      {/* --- MULTI-AUTH LOGIN / SIGNUP MODAL --- */}
       <Modal visible={loginModalVisible} transparent animationType="slide">
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Phone Login / OTP</Text>
+            <Text style={styles.modalTitle}>Authentication Hub</Text>
             
-            {!confirmResult ? (
-              <>
-                <TextInput 
-                  style={styles.input} 
-                  placeholder="Phone Number (+91...)" 
-                  placeholderTextColor="#888" 
-                  keyboardType="phone-pad"
-                  value={phoneNumber} 
-                  onChangeText={setPhoneNumber} 
-                />
-                
-                {/* REQUIRED FOR WEB FIREBASE OTP */}
-                <View nativeID="recaptcha-container" style={{ marginVertical: 5 }} />
+            {/* Auth Tab Switcher */}
+            <View style={styles.authTabRow}>
+              <TouchableOpacity 
+                style={[styles.authTabBtn, authTab === 'email' && styles.authTabBtnActive]} 
+                onPress={() => setAuthTab('email')}
+              >
+                <Text style={[styles.authTabText, authTab === 'email' && styles.authTabTextActive]}>Email / PW</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={[styles.authTabBtn, authTab === 'otp' && styles.authTabBtnActive]} 
+                onPress={() => setAuthTab('otp')}
+              >
+                <Text style={[styles.authTabText, authTab === 'otp' && styles.authTabTextActive]}>Phone OTP</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={[styles.authTabBtn, authTab === 'google' && styles.authTabBtnActive]} 
+                onPress={() => { setAuthTab('google'); handleGoogleLogin(); }}
+              >
+                <Text style={[styles.authTabText, authTab === 'google' && styles.authTabTextActive]}>Gmail</Text>
+              </TouchableOpacity>
+            </View>
 
-                <TouchableOpacity style={styles.modalBtn} onPress={handleSendOTP}>
-                  <Text style={styles.modalBtnText}>Send OTP</Text>
-                </TouchableOpacity>
-              </>
-            ) : (
-              <>
+            {/* EMAIL / PASSWORD FORM */}
+            {authTab === 'email' && (
+              <View style={{ width: '100%' }}>
                 <TextInput 
                   style={styles.input} 
-                  placeholder="Enter 6-digit OTP" 
+                  placeholder="Email Address" 
                   placeholderTextColor="#888" 
-                  keyboardType="number-pad"
-                  maxLength={6}
-                  value={otpCode} 
-                  onChangeText={setOtpCode} 
+                  autoCapitalize="none"
+                  value={email} 
+                  onChangeText={setEmail} 
                 />
-                <TouchableOpacity style={styles.modalBtn} onPress={handleVerifyOTP}>
-                  <Text style={styles.modalBtnText}>Verify OTP & Login</Text>
+                <TextInput 
+                  style={styles.input} 
+                  placeholder="Password" 
+                  placeholderTextColor="#888" 
+                  secureTextEntry 
+                  value={password} 
+                  onChangeText={setPassword} 
+                />
+                <TouchableOpacity style={styles.modalBtn} onPress={handleEmailAuth}>
+                  <Text style={styles.modalBtnText}>{isSignUpMode ? "Sign Up" : "Login"}</Text>
                 </TouchableOpacity>
-              </>
+                <TouchableOpacity onPress={() => setIsSignUpMode(!isSignUpMode)}>
+                  <Text style={styles.switchModeText}>
+                    {isSignUpMode ? "Already have an account? Login" : "Don't have an account? Sign Up"}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+
+            {/* PHONE OTP FORM */}
+            {authTab === 'otp' && (
+              <View style={{ width: '100%', alignItems: 'center' }}>
+                {!confirmResult ? (
+                  <>
+                    <TextInput 
+                      style={styles.input} 
+                      placeholder="Phone Number (+91...)" 
+                      placeholderTextColor="#888" 
+                      keyboardType="phone-pad"
+                      value={phoneNumber} 
+                      onChangeText={setPhoneNumber} 
+                    />
+                    <View nativeID="recaptcha-container" style={{ marginVertical: 5 }} />
+                    <TouchableOpacity style={styles.modalBtn} onPress={handleSendOTP}>
+                      <Text style={styles.modalBtnText}>Send OTP</Text>
+                    </TouchableOpacity>
+                  </>
+                ) : (
+                  <>
+                    <TextInput 
+                      style={styles.input} 
+                      placeholder="Enter 6-digit OTP" 
+                      placeholderTextColor="#888" 
+                      keyboardType="number-pad"
+                      maxLength={6}
+                      value={otpCode} 
+                      onChangeText={setOtpCode} 
+                    />
+                    <TouchableOpacity style={styles.modalBtn} onPress={handleVerifyOTP}>
+                      <Text style={styles.modalBtnText}>Verify OTP & Login</Text>
+                    </TouchableOpacity>
+                  </>
+                )}
+              </View>
+            )}
+
+            {/* GMAIL / GOOGLE AUTH DIRECT ACTION */}
+            {authTab === 'google' && (
+              <View style={{ width: '100%', alignItems: 'center', paddingVertical: 15 }}>
+                <TouchableOpacity style={[styles.modalBtn, { backgroundColor: '#DB4437' }]} onPress={handleGoogleLogin}>
+                  <Text style={styles.modalBtnText}>Continue with Google</Text>
+                </TouchableOpacity>
+              </View>
             )}
 
             <TouchableOpacity onPress={() => { setLoginModalVisible(false); setConfirmResult(null); }}>
@@ -454,8 +565,14 @@ const styles = StyleSheet.create({
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },
   modalContent: { width: '85%', backgroundColor: '#FFF', padding: 25, borderRadius: 15, alignItems: 'center' },
   modalTitle: { fontSize: 16, fontWeight: '900', color: DEEP_BLUE, marginBottom: 15 },
+  authTabRow: { flexDirection: 'row', width: '100%', marginBottom: 15, borderWidth: 1, borderColor: DEEP_BLUE, borderRadius: 8, overflow: 'hidden' },
+  authTabBtn: { flex: 1, paddingVertical: 8, alignItems: 'center', backgroundColor: '#FFF' },
+  authTabBtnActive: { backgroundColor: DEEP_BLUE },
+  authTabText: { fontSize: 11, fontWeight: 'bold', color: DEEP_BLUE },
+  authTabTextActive: { color: MATTE_GOLD },
   input: { width: '100%', borderWidth: 1, borderColor: '#DDD', padding: 12, borderRadius: 8, marginBottom: 12, fontSize: 12, backgroundColor: BONE_WHITE },
   modalBtn: { backgroundColor: DEEP_BLUE, width: '100%', padding: 14, borderRadius: 8, alignItems: 'center', marginTop: 5 },
   modalBtnText: { color: '#FFF', fontWeight: 'bold', fontSize: 12 },
+  switchModeText: { color: DEEP_BLUE, marginTop: 12, fontSize: 11, fontWeight: 'bold', textAlign: 'center' },
   cancelText: { color: '#888', marginTop: 15, fontSize: 11, fontWeight: 'bold' }
 });

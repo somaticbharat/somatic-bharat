@@ -6,13 +6,17 @@ const DEEP_BLUE = '#002147';
 const MATTE_GOLD = '#C5A059';
 const BG_CREAM = '#F9F8F4';
 
+// --- WHATSAPP COMMUNITY LINK ---
+const WHATSAPP_COMMUNITY_URL = 'https://chat.whatsapp.com/KmsMlhwZDrE69Hcr98pEy7?s=hd&p=i&mlu=4';
+
 export default function DestinationScreen({ destination, scores, onReset }) {
   // Calculate total score just for display reference
   const totalScore = Object.values(scores).reduce((acc, val) => acc + val, 0);
 
   const handleWhatsAppJoin = () => {
-    // Replace with your actual Shatkona Bharat WhatsApp group invite link
-    Linking.openURL('https://chat.whatsapp.com/your-group-invite-link');
+    Linking.openURL(WHATSAPP_COMMUNITY_URL).catch(() => {
+      alert("Unable to open WhatsApp link.");
+    });
   };
 
   const handleBookingRedirect = (type) => {

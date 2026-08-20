@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Dimensions, SafeAreaView, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Dimensions, SafeAreaView, Alert, Modal, TextInput } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 // --- FIREBASE IMPORTS ---
 import { auth } from './firebase';
-import { signOut } from 'firebase/auth';
+import { signOut, signInWithPhoneNumber, RecaptchaVerifier } from 'firebase/auth';
 
 const { width } = Dimensions.get('window');
 
@@ -42,7 +42,8 @@ const TRANSLATIONS = {
     saveAndContinue: "SAVE RESULTS & PROCEED",
     community: "JOIN MASTERCLASS COMMUNITY",
     communitySub: "Connect with our Somatic Wellness Network",
-    retake: "LOGOUT"
+    retake: "LOGOUT",
+    loginTitle: "Phone OTP Authentication"
   },
   as: {
     header: "ছ’মেটিক ভাইটেলিটি অডিট",
@@ -68,7 +69,8 @@ const TRANSLATIONS = {
     saveAndContinue: "ফলাফল সংৰক্ষণ কৰক",
     community: "মাষ্টাৰক্লাচ কমিউনিটিত যোগদান কৰক",
     communitySub: "ছ’মেটিক ৱেলনেচ নেটৱৰ্কৰ সৈতে সংলগ্ন হওক",
-    retake: "লগআউট"
+    retake: "লগআউট",
+    loginTitle: "ফোন ও.টি.পি. লগইন"
   }
 };
 
@@ -76,6 +78,27 @@ export default function ResultScreen({ scores, onSaveTrigger, onReset, lang: par
   const [localLang, setLocalLang] = useState(parentLang || 'en');
   const currentLang = parentLang || localLang;
   const t = TRANSLATIONS[currentLang];
+
+  // OTP Login Modal States
+  const [otpModalVisible, setOtpModalVisible] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [otpCode, setOtpCode] = useState('');
+  const [confirmResult, setConfirmResult] = useState(null);
+
+  // Setup Recaptcha Verifier for Web/Firebase Auth
+  useEffect(() => {
+    if (otpModalVisible && !window.recaptchaVerifier) {
+      try {
+        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container-result', {
+          size: 'invisible',
+          callback: () => {},
+          'expired-callback': () => {}
+        });
+      } catch (e) {
+        console.log("Recaptcha init error:", e);
+      }
+    }
+  }, [otpModalVisible]);
 
   const handleLangToggle = () => {
     if (parentSetLang) {
@@ -94,6 +117,45 @@ export default function ResultScreen({ scores, onSaveTrigger, onReset, lang: par
       }
     } catch (error) {
       Alert.alert("Error", error.message);
+    }
+  };
+
+  // --- SEND OTP ---
+  const handleSendOTP = async () => {
+    if (!phoneNumber || phoneNumber.length < 10) {
+      Alert.alert("Error", "Please enter a valid phone number with country code (e.g. +91XXXXXXXXXX)");
+      return;
+    }
+    try {
+      const appVerifier = window.recaptchaVerifier;
+      const confirmation = await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
+      setConfirmResult(confirmation);
+      Alert.alert("OTP Sent", "Check your phone for the verification code.");
+    } catch (error) {
+      Alert.alert("OTP Error", error.message);
+      if (window.recaptchaVerifier) {
+        window.recaptchaVerifier.render().then((widgetId) => {
+          window.grecaptcha.reset(widgetId);
+        });
+      }
+    }
+  };
+
+  // --- VERIFY OTP ---
+  const handleVerifyOTP = async () => {
+    if (!otpCode || otpCode.length < 6) {
+      Alert.alert("Error", "Please enter the 6-digit OTP.");
+      return;
+    }
+    try {
+      await confirmResult.confirm(otpCode);
+      Alert.alert("Success", "Phone verified and logged in successfully!");
+      setOtpModalVisible(false);
+      setConfirmResult(null);
+      setPhoneNumber('');
+      setOtpCode('');
+    } catch (error) {
+      Alert.alert("Verification Failed", error.message);
     }
   };
 
@@ -127,7 +189,7 @@ export default function ResultScreen({ scores, onSaveTrigger, onReset, lang: par
           {/* HEADER TITLE */}
           <Text style={styles.headerText}>{t.header}</Text>
 
-          {/* BREathing ROOM & SCORE RING */}
+          {/* BREATHING ROOM & SCORE RING */}
           <View style={styles.scoreContainer}>
             <View style={styles.outerRing}>
               <Text style={styles.percentageText}>{loadPercentage}%</Text>
@@ -179,12 +241,63 @@ export default function ResultScreen({ scores, onSaveTrigger, onReset, lang: par
             </LinearGradient>
           </TouchableOpacity>
 
+          {/* PHONE OTP LOGIN TRIGGER */}
+          <TouchableOpacity onPress={() => setOtpModalVisible(true)} style={styles.otpTriggerBtn}>
+            <Text style={styles.otpTriggerText}>Login via Phone OTP</Text>
+          </TouchableOpacity>
+
           {/* LOGOUT / RETAKE ACTION */}
           <TouchableOpacity onPress={handleLogout} style={styles.resetBtn}>
             <Text style={styles.resetText}>{t.retake}</Text>
           </TouchableOpacity>
 
         </ScrollView>
+
+        {/* --- PHONE OTP MODAL --- */}
+        <Modal visible={otpModalVisible} transparent animationType="slide">
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>{t.loginTitle}</Text>
+              
+              {!confirmResult ? (
+                <View style={{ width: '100%', alignItems: 'center' }}>
+                  <TextInput 
+                    style={styles.input} 
+                    placeholder="Phone Number (+91...)" 
+                    placeholderTextColor="#888" 
+                    keyboardType="phone-pad"
+                    value={phoneNumber} 
+                    onChangeText={setPhoneNumber} 
+                  />
+                  <View nativeID="recaptcha-container-result" style={{ marginVertical: 5 }} />
+                  <TouchableOpacity style={styles.modalBtn} onPress={handleSendOTP}>
+                    <Text style={styles.modalBtnText}>Send OTP</Text>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <View style={{ width: '100%', alignItems: 'center' }}>
+                  <TextInput 
+                    style={styles.input} 
+                    placeholder="Enter 6-digit OTP" 
+                    placeholderTextColor="#888" 
+                    keyboardType="number-pad"
+                    maxLength={6}
+                    value={otpCode} 
+                    onChangeText={setOtpCode} 
+                  />
+                  <TouchableOpacity style={styles.modalBtn} onPress={handleVerifyOTP}>
+                    <Text style={styles.modalBtnText}>Verify OTP & Login</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+
+              <TouchableOpacity onPress={() => { setOtpModalVisible(false); setConfirmResult(null); }}>
+                <Text style={styles.cancelText}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+
       </SafeAreaView>
     </LinearGradient>
   );
@@ -215,6 +328,15 @@ const styles = StyleSheet.create({
   gradientBtn: { paddingVertical: 20, paddingHorizontal: 20, alignItems: 'center' },
   communityBtnText: { color: PURE_WHITE, fontWeight: '900', fontSize: 12, letterSpacing: 1.5, textAlign: 'center' },
   communitySubText: { color: PURE_WHITE, fontSize: 9, marginTop: 6, fontWeight: '600', opacity: 0.85, letterSpacing: 0.5 },
-  resetBtn: { marginTop: 35, paddingBottom: 20, alignItems: 'center' },
-  resetText: { color: TEXT_MUTED, fontSize: 11, fontWeight: '800', letterSpacing: 1.5 }
+  otpTriggerBtn: { marginTop: 25, paddingVertical: 10, alignItems: 'center' },
+  otpTriggerText: { color: SKY_DEEP, fontSize: 11, fontWeight: '800', letterSpacing: 1, textDecorationLine: 'underline' },
+  resetBtn: { marginTop: 15, paddingBottom: 20, alignItems: 'center' },
+  resetText: { color: TEXT_MUTED, fontSize: 11, fontWeight: '800', letterSpacing: 1.5 },
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },
+  modalContent: { width: '85%', backgroundColor: '#FFF', padding: 25, borderRadius: 15, alignItems: 'center' },
+  modalTitle: { fontSize: 16, fontWeight: '900', color: SKY_DEEP, marginBottom: 15 },
+  input: { width: '100%', borderWidth: 1, borderColor: '#DDD', padding: 12, borderRadius: 8, marginBottom: 12, fontSize: 12, backgroundColor: PURE_WHITE },
+  modalBtn: { backgroundColor: SKY_DEEP, width: '100%', padding: 14, borderRadius: 8, alignItems: 'center', marginTop: 5 },
+  modalBtnText: { color: '#FFF', fontWeight: 'bold', fontSize: 12 },
+  cancelText: { color: '#888', marginTop: 15, fontSize: 11, fontWeight: 'bold' }
 });
