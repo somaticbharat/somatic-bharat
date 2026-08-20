@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 
 // --- FIREBASE IMPORTS ---
-import { auth, db } from './firebaseConfig';
+import { auth, db } from './firebase';
 import { signInWithPhoneNumber, RecaptchaVerifier, signOut } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 
