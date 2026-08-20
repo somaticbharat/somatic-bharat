@@ -3,12 +3,13 @@ import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 
 const translations = {
   as: {
+    disclaimer: "স্বীকাৰোক্তি (Disclaimer): এই এপ্লিকেচনটো কেৱল শিক্ষা, ছ’মেটিক সজাগতা আৰু আত্ম-মূল্যায়নৰ (Self-Assessment) বাবে প্ৰস্তুত কৰা হৈছে। ই কোনো আনুষ্ঠানিক চিকিৎসা নিদান (Medical Diagnosis) বা চিকিৎসা সেৱা আগবঢ়োৱা নহয়।",
     visionary: "প্ৰতিষ্ঠাপক",
-    founderName: "ডাঃ এম. পি. দাস পি.টি.,(BPT, LLB, RYT 500)",
+    founderName: "ডাঃ এম. পি. দাস পি.টি., (BPT, LLB, RYT 500)",
     clinicalExp: "ক্লিনিকেল অভিজ্ঞতা @ NIMHANS | Apollo Blore",
-    founderBody: "১২ বছৰৰো অধিক ক্লিনিকেল অভিজ্ঞতাৰ সৈতে (NIMHANS/Apollo), আমাৰ প্ৰতিষ্ঠাপকে ফিজিঅ’থেৰাপী, আইনী ওকালতি আৰু ছ’মেটিক জ্ঞানৰ মাজত এক নতুন যোগসূত্ৰ স্থাপন কৰিছে। তেখেতৰ যাত্ৰাই 'Uncut' সংযোগ আৱিষ্কাৰ কৰিছিল—য’ত সমাধান নোহোৱা অৱচেতন মনেই শৰীৰত 'অদৃশ্য জুই' বা দীৰ্ঘদিনীয়া বিষ হিচাপে প্ৰকাশ পায়।",
+    founderBody: "১২ বছৰৰো অধিক ক্লিনিকেল অভিজ্ঞতাৰ জৰিয়তে ৩০,০০০ তকৈও অধিক দীৰ্ঘদিনীয়া বিষত আক্ৰান্ত ৰোগীৰ চিকিৎসা কৰি, আমাৰ প্ৰতিষ্ঠাপকে এই মিছন আৰু 'ছ’মেটিক অডিট' (Somatic Audit) ব্যৱস্থাটো প্ৰস্তুত কৰিছে। তেখেতৰ চিকিৎসা আৰু গৱেষণাই এনে এক প্ৰটোকল সৃষ্টি কৰিছে যিয়ে আমাৰ সমাজৰ এক নিৰৱ মহামাৰীক মোকাবিলা কৰিবলৈ সক্ষম। আজি ভাৰতৰ প্ৰায় ২০ কোটি লোক এনে বিষত আক্ৰান্ত, যাৰ ফলত কাৰ্যকৰী কৰ্মশক্তিত কৰ্মস্থানৰ পৰা অনুপস্থিতি (Absenteeism) তকৈ ২-৪ গুণ বেছি আৰ্থিক ক্ষতি (Presenteeism) হৈছে। বিশেষকৈ ৯০% মহিলা ফাইব্ৰ’মায়েলজিয়া (Fibromyalgia) আৰু ছ’মেট’ফৰ্ম বিষৰ ভুক্তভোগী। এই প্ৰটোকলৰ লক্ষ্য হ’ল সেই 'অদৃশ্য জুই' নুমুৱাই সমাজক পুনৰ সবল কৰি তোলা।",
     shatkonaTitle: "ষটকোণ ৬-ভেক্টৰ মেপিং",
-    shatkonaDesc: "আমাৰ স্বকীয় ডায়েগনষ্টিক ফ্ৰেমৱৰ্ক। আমি আপোনাৰ 'ছ’মেটিক অডিট' (Somatic Audit) কৰোঁ আৰু বিষৰ উৎস তলত দিয়া ছয়টা গুৰুত্বপূৰ্ণ ভেক্টৰৰ জৰিয়তে মেপিং কৰোঁ:",
+    shatkonaDesc: "আমাৰ স্বকীয় এনালাইটিকেল ফ্ৰেমৱৰ্ক। আমি আপোনাৰ 'ছ’মেটিক অডিট' (Somatic Audit) কৰোঁ আৰু বিষৰ মূল উৎস তলত দিয়া ছয়টা গুৰুত্বপূৰ্ণ ভেক্টৰৰ জৰিয়তে মেপিং কৰোঁ:",
     vectors: [
       { n: "১. যান্ত্ৰিক (Mechanical)", d: "গাঁঠি আৰু কলাৰ চাপ" },
       { n: "২. পূৰ্বপুৰুষীয় (Ancestral)", d: "এপিজেনেটিক্সৰ প্ৰভাৱ" },
@@ -23,12 +24,13 @@ const translations = {
     foundationBody: "এক অলাভজনক সংস্থা যি সামাজিক গৱেষণা (TISRI) আৰু বৃত্তিমূলক শিক্ষা (SIBS Academy) ৰ বাবে উৎসৰ্গিত। আমি বিজ্ঞান, সংস্কৃতি আৰু সহানুভূতিৰ জৰিয়তে 'অসমাধানিত বিষৰ মহামাৰী' দূৰ কৰিবলৈ সংকল্পবদ্ধ।"
   },
   en: {
+    disclaimer: "Disclaimer: This platform and its somatic audits are strictly for educational, self-awareness, and informational purposes. They do not constitute formal medical diagnosis, treatment, or clinical advice.",
     visionary: "The Visionary",
-    founderName: "Dr. MP Das PT,(BPT, LLB, RYT 500)",
+    founderName: "Dr. M. P. Das PT, (BPT, LLB, RYT 500)",
     clinicalExp: "Clinical exposure @ NIMHANS | Apollo Blore",
-    founderBody: "With over 12 years of clinical exposure (NIMHANS/Apollo), our founder has bridged the gap between physical therapy, legal advocacy, and somatic wisdom. His journey led to the discovery of the 'Uncut' connection—where unresolved subconscious patterns manifest as 'Invisible Fire' or chronic physical pain.",
+    founderBody: "With over 12 years of clinical exposure and having managed more than 30,000 chronic pain cases, our founder developed this mission and the somatic audit system to address the silent epidemic affecting over 200 million Indians. This condition causes 2 to 4 times more financial damage to the nation through presenteeism than absenteeism in the workforce due to somatoform pain and chronic stress, with females representing 90% of fibromyalgia victims.",
     shatkonaTitle: "Shatkona 6-Vector Model",
-    shatkonaDesc: "Our proprietary diagnostic framework for the 'Somatic Audit.' We map the roots of your pain across six vital dimensions:",
+    shatkonaDesc: "Our proprietary analytical framework for the 'Somatic Audit.' We map the roots of your pain across six vital dimensions:",
     vectors: [
       { n: "1. Mechanical", d: "Joint & Tissue Load" },
       { n: "2. Ancestral", d: "Epigenetic Imprints" },
@@ -49,6 +51,11 @@ export const AboutUs = ({ lang = 'as' }) => {
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      {/* --- NON-MEDICAL EDUCATIONAL DISCLAIMER --- */}
+      <View style={styles.disclaimerBox}>
+        <Text style={styles.disclaimerText}>{t.disclaimer}</Text>
+      </View>
+
       {/* --- THE FOUNDER --- */}
       <View style={styles.section}>
         <Text style={styles.header}>{t.visionary}</Text>
@@ -99,6 +106,21 @@ export const AboutUs = ({ lang = 'as' }) => {
 
 const styles = StyleSheet.create({
   container: { paddingVertical: 10, paddingHorizontal: 15 },
+  disclaimerBox: {
+    backgroundColor: '#FFF3CD',
+    borderColor: '#FFEEBA',
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 8,
+    marginBottom: 20,
+  },
+  disclaimerText: {
+    fontSize: 10,
+    color: '#856404',
+    textAlign: 'center',
+    fontWeight: '600',
+    lineHeight: 14,
+  },
   section: { marginBottom: 25 },
   header: { fontSize: 22, fontWeight: 'bold', color: '#002147', marginBottom: 12 },
   

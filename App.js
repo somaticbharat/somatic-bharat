@@ -13,7 +13,7 @@ export default function App() {
   const [userRoute, setUserRoute] = useState(null);
   
   // Set Assamese ('as') as the global initial state
-  const [lang, setLang] = useState('as'); 
+  const [lang, setLang] = useState('en'); 
 
   // Logic to toggle between English and Assamese
   const toggleLang = () => setLang(prev => (prev === 'en' ? 'as' : 'en'));

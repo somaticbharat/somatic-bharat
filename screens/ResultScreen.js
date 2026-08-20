@@ -42,11 +42,9 @@ const TRANSLATIONS = {
 
     // Moderate / Low Load Translations
     modLoad: "Balanced patterns identified! You are in an ideal space to practice self-guided daily vagal toning and mindful fascia maintenance to keep your energy flowing smoothly.",
-    restoreTitleMod: "GUIDED VAGAL TONING & MAINTENANCE",
-    waitlistBtn: "JOIN SELF-GUIDED ACADEMY",
-    waitlistSub: "Access daily vagal exercises & fascia care modules",
-    
+  
     // Action & Retake
+    signUpTitle: "SIGN UP / LOGIN",
     saveAndContinue: "SAVE RESULTS & PROCEED",
     saveSubText: "Secure your score & access tailored options",
     retake: "RETAKE AUDIT",
@@ -68,11 +66,9 @@ const TRANSLATIONS = {
 
     // Moderate / Low Load Translations
     modLoad: "মধ্যমীয়াৰ পৰা নূন্যতম স্নায়ৱিক হেঁচা চিনাক্ত কৰা হৈছে। দৈনন্দিন ফেচিয়া ৰিলিজ আৰু স্ব-পৰিচৰ্যাৰ বাবে আপুনি উপযুক্ত।",
-    restoreTitleMod: "স্বাভাৱিক ফেচিয়া ৰিলিজ আৰু স্ব-পৰিচৰ্যা",
-    waitlistBtn: "স্ব-নিৰ্দেশিত একাডেমীত যোগদান কৰক",
-    waitlistSub: "দৈনন্দিন ব্যায়াম আৰু ফেচিয়া কেয়াৰ মডিউলসমূহ লাভ কৰক",
-    
+  
     // Action & Retake
+    signUpTitle: "ছাইন আপ / লগইন",
     saveAndContinue: "ফলাফল সংৰক্ষণ কৰক",
     saveSubText: "আপোনাৰ স্ক’ৰ সুৰক্ষিত কৰক আৰু পৰামৰ্শ লাভ কৰক",
     retake: "অডিট পুনৰ আৰম্ভ কৰক",
@@ -117,9 +113,9 @@ export default function ResultScreen({ scores, onSaveTrigger, onReset, lang: par
   const handleLangToggle = () => {
     const nextLang = currentLang === 'en' ? 'as' : 'en';
     if (parentSetLang) {
-      parentSetLang(nextLang); // ✅ Passes the explicit target language upstream
+      parentSetLang(nextLang); 
     } else {
-      setLocalLang(nextLang); // Fallback if rendered independently
+      setLocalLang(nextLang); 
     }
   };
 
@@ -281,6 +277,9 @@ export default function ResultScreen({ scores, onSaveTrigger, onReset, lang: par
             </View>
           </View>
 
+          {/* SIGN UP TITLE LABEL ADDED HERE */}
+          <Text style={styles.signUpSectionTitle}>{t.signUpTitle}</Text>
+
           {/* PRIMARY CALL TO ACTION BUTTON WITH MULTI-AUTH TRIGGER */}
           <TouchableOpacity style={styles.communityBtn} onPress={() => setAuthModalVisible(true)} activeOpacity={0.9}>
             <LinearGradient 
@@ -428,15 +427,12 @@ const styles = StyleSheet.create({
   prescriptionBody: { color: TEXT_DARK, fontSize: 13, lineHeight: 24, fontWeight: '400', opacity: 0.9 },
   section: { width: '100%', marginBottom: 30 },
   sectionTitle: { color: TEXT_DARK, fontSize: 11, fontWeight: '800', letterSpacing: 1.5, marginBottom: 14, opacity: 0.8 },
+  signUpSectionTitle: { width: '100%', color: TEXT_DARK, fontSize: 11, fontWeight: '800', letterSpacing: 1.5, marginBottom: 10, opacity: 0.8 },
   optionCard: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: PURE_WHITE, padding: 20, borderRadius: 18, borderWidth: 1, borderColor: 'rgba(2, 132, 199, 0.12)', shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.04, shadowRadius: 8, elevation: 2 },
   optionInfo: { flex: 1, paddingRight: 10 },
   optionType: { color: TEXT_DARK, fontSize: 12, fontWeight: '900', letterSpacing: 0.5 },
   addressText: { color: TEXT_MUTED, fontSize: 10, marginTop: 6, lineHeight: 15, fontWeight: '500' },
   iconCircle: { width: 40, height: 40, borderRadius: 20, backgroundColor: SKY_LIGHT, justifyContent: 'center', alignItems: 'center' },
-  communityBtn: { width: '100%', marginTop: 10, borderRadius: 18, overflow: 'hidden', shadowColor: SKY_DEEP, shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.2, shadowRadius: 12, elevation: 5 },
-  gradientBtn: { paddingVertical: 20, paddingHorizontal: 20, alignItems: 'center' },
-  communityBtnText: { color: PURE_WHITE, fontWeight: '900', fontSize: 12, letterSpacing: 1.5, textAlign: 'center' },
-  communitySubText: { color: PURE_WHITE, fontSize: 9, marginTop: 6, fontWeight: '600', opacity: 0.85, letterSpacing: 0.5 },
   resetBtn: { marginTop: 15, paddingBottom: 20, alignItems: 'center' },
   resetText: { color: TEXT_MUTED, fontSize: 11, fontWeight: '800', letterSpacing: 1.5 },
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },

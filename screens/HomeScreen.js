@@ -46,9 +46,10 @@ const translations = {
     nav: ["ABOUT", "TISRI", "SIBS ACADEMY", "WORKSHOPS", "CAREER", "REVIEWS"],
     back: "← BACK TO HOME",
     tagline: "Building a Neuro-Resilient India",
-    login: "LOGIN / AUTH",
+    login: "LOGIN",
     logout: "LOGOUT",
     auditBtn: "START SOMATIC AUDIT",
+    volunteerBtn: "JOIN MISSION 2030 VOLUNTEER",
     heroText: "The MRI says you're fine. Blood reports are 'normal'. All treatments failed? Called just in your head? But your body is imploring, seeking deliverance from the pain. Then don't worry anymore. The fatigue, the brain fog, the moving pain—it's not in your head. It's an invisible fire called ",
     heroHighlight: "Central Sensitization—the hidden root behind conditions like Fibromyalgia.",
     ctaHero: "Discover yourself with the 3-min SOMATIC audit",
@@ -78,9 +79,10 @@ const translations = {
     nav: ["আমাৰ বিষয়ে", "TISRI গৱেষণা", "SIBS একাডেমী", "কৰ্মশালা", "কেৰিয়াৰ", "মতামত"],
     back: "← পাছলৈ যাওক",
     tagline: "এক সুদৃঢ় স্নায়ৱিক ভাৰতীয় সমাজ গঠনৰ যাত্ৰা",
-    login: "লগ-ইন / অথ",
+    login: "লগ-ইন",
     logout: "লগ-আউট",
     auditBtn: "ছ’মেটিক অডিট আৰম্ভ কৰক",
+    volunteerBtn: "মিছন ২০৩০ স্বেচ্ছাসেৱক হওক",
     heroText: "আপুনিও এই সমস্যাৰ ভুক্তভোগী নেকি? MRI ৰিপৰ্ট ঠিক আছে। তেজৰ পৰীক্ষাও 'স্বাভাৱিক'। সকলো ধৰণৰ চিকিৎসা কৰিও বিফল হৈছে আৰু এই বিষক মনৰ ধাৰণা বুলি কোৱা হৈছে? তেনেহ’লে আৰু চিন্তা নকৰিব। সেই ভাগৰ, মগজুৰ ধুঁৱলী-কুঁৱলী ভাব আৰু শৰীৰৰ যন্ত্ৰণা... এইয়া আপোনাৰ মনৰ ভুল নহয়। এইয়া এক অদৃশ্য জুই যাক কোৱা হয় ",
     heroHighlight: "চেণ্ট্ৰেল চেন্সিটাইজেচন— যি ফাইব্ৰ’মায়েলজিয়াৰ দৰে যন্ত্ৰণাৰ আঁৰত লুকাই থকা এক গোপন কাৰণ।",
     ctaHero: "৩-মিনিটৰ ছ’মেটিক অডিটৰ জৰিয়তে নিজক আৱিষ্কাৰ কৰক",
@@ -107,7 +109,7 @@ const translations = {
   }
 };
 
-export default function HomeScreen({ onStart, lang, setLang }) {
+export default function HomeScreen({ onStart, onLoginSuccess, lang, setLang }) {
   const t = translations[lang] || translations.en;
   const scrollRef = useRef(null);
   const [activePage, setActivePage] = useState('HOME');
@@ -151,6 +153,7 @@ export default function HomeScreen({ onStart, lang, setLang }) {
   }, [loginModalVisible, authTab]);
 
   // --- EMAIL / PASSWORD AUTH ---
+  // --- EMAIL / PASSWORD AUTH ---
   const handleEmailAuth = async () => {
     if (!email || !password) {
       Alert.alert("Error", "Please enter both email and password.");
@@ -169,7 +172,13 @@ export default function HomeScreen({ onStart, lang, setLang }) {
       setLoginModalVisible(false);
       setEmail('');
       setPassword('');
-      if (onStart) onStart(); 
+      
+      // TRIGGER DESTINATION SCREEN NAVIGATION
+      if (onLoginSuccess) {
+        onLoginSuccess();
+      } else if (onStart) {
+        onStart(); 
+      }
     } catch (error) {
       Alert.alert("Authentication Error", error.message);
     }
@@ -183,7 +192,13 @@ export default function HomeScreen({ onStart, lang, setLang }) {
       setUser(result.user);
       Alert.alert("Success", "Logged in with Gmail successfully!");
       setLoginModalVisible(false);
-      if (onStart) onStart();
+      
+      // TRIGGER DESTINATION SCREEN NAVIGATION
+      if (onLoginSuccess) {
+        onLoginSuccess();
+      } else if (onStart) {
+        onStart();
+      }
     } catch (error) {
       Alert.alert("Google Sign-In Error", error.message);
     }
@@ -224,7 +239,13 @@ export default function HomeScreen({ onStart, lang, setLang }) {
       setPhoneNumber('');
       setOtpCode('');
       setConfirmResult(null);
-      if (onStart) onStart();
+      
+      // TRIGGER DESTINATION SCREEN NAVIGATION
+      if (onLoginSuccess) {
+        onLoginSuccess();
+      } else if (onStart) {
+        onStart();
+      }
     } catch (error) {
       Alert.alert("Verification Failed", error.message);
     }
@@ -241,7 +262,6 @@ export default function HomeScreen({ onStart, lang, setLang }) {
       console.log(error);
     }
   };
-
   // --- HANDLE VOLUNTEER REGISTRATION ---
   const handleVolunteerSubmit = async () => {
     if (!vName || !vPhone || !vCity) {
@@ -275,7 +295,7 @@ export default function HomeScreen({ onStart, lang, setLang }) {
       default:
         return (
           <>
-            {/* HERO SECTION - ENLARGED HERO TEXT & NO FOUNDER IMAGE */}
+            {/* HERO SECTION - ONLY AUDIT BUTTON NOW */}
             <View style={styles.hero}>
               <Text style={styles.hook}>
                 {t.heroText}
@@ -285,13 +305,6 @@ export default function HomeScreen({ onStart, lang, setLang }) {
               <View style={styles.heroActions}>
                 <TouchableOpacity style={styles.heroCta} onPress={onStart}>
                   <Text style={styles.heroCtaText}>{t.auditBtn}</Text>
-                </TouchableOpacity>
-                
-                <TouchableOpacity 
-                  style={[styles.heroCta, {backgroundColor: 'transparent', borderWidth: 2, borderColor: DEEP_BLUE, marginTop: 15}]} 
-                  onPress={() => setVolunteerModalVisible(true)}
-                >
-                  <Text style={[styles.heroCtaText, {color: DEEP_BLUE}]}>{t.volunteerBtn}</Text>
                 </TouchableOpacity>
               </View>
               
@@ -524,8 +537,6 @@ const styles = StyleSheet.create({
   mainContainer: { minHeight: 400 },
   pageWrapper: { padding: 20, backgroundColor: '#FFF' },
   
-  // HERO STYLES (ENLARGED TEXT & NO FOUNDER PIC)
- // HERO STYLES (ENLARGED & PROMINENT AUDIT CALLOUT)
   hero: { padding: 30, alignItems: 'center', backgroundColor: '#FFF' },
   hook: { fontSize: 18, textAlign: 'center', lineHeight: 30, color: DEEP_BLUE, marginBottom: 30, fontWeight: '600' },
   
