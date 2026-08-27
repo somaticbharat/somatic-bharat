@@ -56,9 +56,9 @@ export default function DestinationScreen({ destination, scores, onReset, curren
 
   const handleBookingRedirect = (type) => {
     if (type === 'IN_PERSON') {
-      Linking.openURL('https://shatkonalife.com/book-in-person');
+      Linking.openURL('https://shatvayu.com/book-in-person');
     } else {
-      Linking.openURL('https://shatkonalife.com/teleconsult');
+      Linking.openURL('https://shatvayu.com/teleconsult');
     }
   };
 

@@ -9,7 +9,7 @@ const translations = {
     clinicalExp: "ক্লিনিকেল অভিজ্ঞতা @ NIMHANS | Apollo Blore",
     founderBody: "১২ বছৰৰো অধিক ক্লিনিকেল অভিজ্ঞতাৰ জৰিয়তে ৩০,০০০ তকৈও অধিক দীৰ্ঘদিনীয়া বিষত আক্ৰান্ত ৰোগীৰ চিকিৎসা কৰি, আমাৰ প্ৰতিষ্ঠাপকে এই মিছন আৰু 'ছ’মেটিক অডিট' (Somatic Audit) ব্যৱস্থাটো প্ৰস্তুত কৰিছে। তেখেতৰ চিকিৎসা আৰু গৱেষণাই এনে এক প্ৰটোকল সৃষ্টি কৰিছে যিয়ে আমাৰ সমাজৰ এক নিৰৱ মহামাৰীক মোকাবিলা কৰিবলৈ সক্ষম। আজি ভাৰতৰ প্ৰায় ২০ কোটি লোক এনে বিষত আক্ৰান্ত, যাৰ ফলত কাৰ্যকৰী কৰ্মশক্তিত কৰ্মস্থানৰ পৰা অনুপস্থিতি (Absenteeism) তকৈ ২-৪ গুণ বেছি আৰ্থিক ক্ষতি (Presenteeism) হৈছে। বিশেষকৈ ৯০% মহিলা ফাইব্ৰ’মায়েলজিয়া (Fibromyalgia) আৰু ছ’মেট’ফৰ্ম বিষৰ ভুক্তভোগী। এই প্ৰটোকলৰ লক্ষ্য হ’ল সেই 'অদৃশ্য জুই' নুমুৱাই সমাজক পুনৰ সবল কৰি তোলা।",
     shatkonaTitle: "ষটকোণ ৬-ভেক্টৰ মেপিং",
-    shatkonaDesc: "আমাৰ স্বকীয় এনালাইটিকেল ফ্ৰেমৱৰ্ক। আমি আপোনাৰ 'ছ’মেটিক অডিট' (Somatic Audit) কৰোঁ আৰু বিষৰ মূল উৎস তলত দিয়া ছয়টা গুৰুত্বপূৰ্ণ ভেক্টৰৰ জৰিয়তে মেপিং কৰোঁ:",
+    shatkonaDesc: "আমাৰ স্বকীয় এনালাইটিকেল ফ্ৰেমৱৰ্ক। আমি আপোনাৰ 'ছ’মেটিক অডিট' কৰোঁ আৰু বিষৰ মূল উৎস তলত দিয়া ছয়টা গুৰুত্বপূৰ্ণ ভেক্টৰৰ জৰিয়তে মেপিং কৰোঁ:",
     vectors: [
       { n: "১. যান্ত্ৰিক (Mechanical)", d: "গাঁঠি আৰু কলাৰ চাপ" },
       { n: "২. পূৰ্বপুৰুষীয় (Ancestral)", d: "এপিজেনেটিক্সৰ প্ৰভাৱ" },
@@ -20,8 +20,7 @@ const translations = {
     ],
     missionTitle: "মিছন ২০৩০: এক সুদৃঢ় স্নায়ৱিক ভাৰত",
     missionBody: "আমাৰ লক্ষ্য এখন 'যন্ত্ৰণামুক্ত আৰু স্নায়ৱিকভাৱে সুদৃঢ় ভাৰত' গঢ়ি তোলা। ২০৩০ চনৰ ভিতৰত আমি প্ৰতিখন বিদ্যালয় আৰু কৰ্প’ৰেট কাৰ্যালয়ত ছ’মেটিক শিক্ষা (Somatic Literacy) কাৰ্যকৰী কৰিব বিচাৰোঁ, যাতে ৰাষ্ট্ৰীয় কৰ্মশক্তিয়ে কেৱল উৎপাদনশীল হোৱাই নহয়, বৰঞ্চ জৈৱিকভাৱে নিয়ন্ত্রিত আৰু ট্ৰমা-ইনফৰ্মড হয়।",
-    foundationTitle: "ছ’মেটিক ভাৰত MOVEMENT",
-    foundationBody: "এক অলাভজনক সংস্থা যি সামাজিক গৱেষণা (TISRI) আৰু বৃত্তিমূলক শিক্ষা (SIBS Academy) ৰ বাবে উৎসৰ্গিত। আমি বিজ্ঞান, সংস্কৃতি আৰু সহানুভূতিৰ জৰিয়তে 'অসমাধানিত বিষৰ মহামাৰী' দূৰ কৰিবলৈ সংকল্পবদ্ধ।"
+    foundationTitle: "ছ’মেটিক ভাৰত মুভমেণ্ট",
   },
   en: {
     disclaimer: "Disclaimer: This platform and its somatic audits are strictly for educational, self-awareness, and informational purposes. They do not constitute formal medical diagnosis, treatment, or clinical advice.",
@@ -34,15 +33,14 @@ const translations = {
     vectors: [
       { n: "1. Mechanical", d: "Joint & Tissue Load" },
       { n: "2. Ancestral", d: "Epigenetic Imprints" },
-      { n: "3. Neural", d: "Nervous Overdrive" },
+      { n: "3. Neural", d: "Nervous OverDrive" },
       { n: "4. Atmospheric", d: "Environmental Stress" },
       { n: "5. Structural", d: "Fascial Alignment" },
       { n: "6. Humoral", d: "Systemic Toxicity" }
     ],
     missionTitle: "Mission 2030: Neuro-Resilient Bharat",
-    missionBody: "We are committed to building a 'Pain-Free & Neuro-Resilient India.' By 2030, we aim to implement somatic literacy across every school and corporate space, ensuring a national workforce that is not just productive, but biologically regulated and trauma-informed.",
+    missionBody: "We are committed to building a 'Somato Pain-Free & Neuro-Resilient India.' By 2030, we aim to implement somatic literacy across every school and corporate space, ensuring a national workforce that is not just productive, but biologically regulated and trauma-informed.",
     foundationTitle: "Somatic Bharat Movement",
-    foundationBody: "A non-profit entity dedicated to Social Research (TISRI) and Vocational Education (SIBS Academy). We exist to solve the 'Unresolved Pain Epidemic' through science, culture, and compassion."
   }
 };
 
