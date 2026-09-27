@@ -41,12 +41,15 @@ const translations = {
 // --- WHATSAPP COMMUNITY LINK ---
 const WHATSAPP_COMMUNITY_URL = 'https://chat.whatsapp.com/KmsMlhwZDrE69Hcr98pEy7?s=hd&p=i&mlu=4';
 
-export default function DestinationScreen({ destination, scores, onReset, currentLang = 'en' }) {
+export default function DestinationScreen({ destination, scores = {}, onReset, currentLang = 'en' }) {
   // Select translation dictionary based on currentLang (defaults to 'en')
   const t = translations[currentLang] || translations.en;
 
-  // Calculate total score just for display reference
-  const totalScore = Object.values(scores).reduce((acc, val) => acc + val, 0);
+  // ✅ SAFE CALCULATION: Protect against null/undefined scores
+  const scoreArray = Object.values(scores || {});
+  const totalScore = scoreArray.length > 0 
+    ? scoreArray.reduce((acc, val) => acc + (typeof val === 'number' ? val : 0), 0)
+    : 0;
 
   const handleWhatsAppJoin = () => {
     Linking.openURL(WHATSAPP_COMMUNITY_URL).catch(() => {
