@@ -8,7 +8,7 @@ import {
   GoogleAuthProvider, 
   signInWithPopup 
 } from 'firebase/auth';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
 
 const DEEP_BLUE = '#002147';
 const MATTE_GOLD = '#C5A059';
@@ -18,7 +18,7 @@ const BG_CREAM = '#F9F8F4';
 const translations = {
   en: {
     brand: "SOMATIC BHARAT",
-    title: "Save Your Audit Results",
+    title: "Access Your Profile",
     subtitle: "Secure your vector profile and unlock your personalized recovery pathway.",
     googleBtn: "Continue with Google",
     emailBtn: "Continue with Email & Password",
@@ -31,11 +31,11 @@ const translations = {
     backMethod: "← Choose another sign-in method",
     loaderText: "Processing securely...",
     defaultError: "Please enter both email and password.",
-    firestoreError: "Failed to save audit results. Please try again."
+    firestoreError: "Failed to process profile data. Please try again."
   },
   as: {
     brand: "ছ’মেটিক ভাৰত",
-    title: "আপোনাৰ অডিটৰ ফলাফলসমূহ সংৰক্ষণ কৰক",
+    title: "আপোনাৰ প্ৰফাইলত প্ৰৱেশ কৰক",
     subtitle: "আপোনাৰ ভেক্তৰ প্ৰফাইল সুৰক্ষিত কৰক আৰু আপোনাৰ নিজা পুনৰুদ্ধাৰৰ পথ উন্মুক্ত কৰক।",
     googleBtn: "গুগলৰ জৰিয়তে আগবাঢ়ক",
     emailBtn: "ইমেইল আৰু পাছৱৰ্ডৰ জৰিয়তে আগবাঢ়ক",
@@ -48,19 +48,18 @@ const translations = {
     backMethod: "← আন এটা ছাইন-ইন পদ্ধতি বাছক",
     loaderText: "সুৰক্ষিতভাৱে প্ৰক্ৰিয়া কৰা হৈছে...",
     defaultError: "অনুগ্ৰহ কৰি ইমেইল আৰু পাছৱৰ্ড দুয়োটাই দিয়ক।",
-    firestoreError: "অডিট ফলাফল সংৰক্ষণ কৰাত ব্যৰ্থ হৈছে। পুনৰ চেষ্টা কৰক।"
+    firestoreError: "প্ৰফাইল তথ্য সংৰক্ষণ কৰাত ব্যৰ্থ হৈছে। পুনৰ চেষ্টা কৰক।"
   }
 };
 
 export default function AuthScreen({ pendingScores, lang = 'en', onAuthSuccess }) {
   const [authMode, setAuthMode] = useState('select'); // 'select', 'email'
-  const [isSignUp, setIsSignUp] = useState(true);
+  const [isSignUp, setIsSignUp] = useState(false); // Default to Login for returning users
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  // Select translation dictionary based on lang prop (defaults to 'en')
   const t = translations[lang] || translations.en;
 
   // 1. Google Sign-In
@@ -70,7 +69,7 @@ export default function AuthScreen({ pendingScores, lang = 'en', onAuthSuccess }
       setErrorMessage('');
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
-      await saveUserDataAndFinish(result.user.uid);
+      await processUserSession(result.user.uid);
     } catch (error) {
       setErrorMessage(error.message);
       setLoading(false);
@@ -92,24 +91,46 @@ export default function AuthScreen({ pendingScores, lang = 'en', onAuthSuccess }
       } else {
         userCredential = await signInWithEmailAndPassword(auth, email, password);
       }
-      await saveUserDataAndFinish(userCredential.user.uid);
+      await processUserSession(userCredential.user.uid);
     } catch (error) {
       setErrorMessage(error.message);
       setLoading(false);
     }
   };
 
-  // 3. Save to Firestore & Proceed
-  const saveUserDataAndFinish = async (uid) => {
+  // 3. Save new audit OR fetch existing audit for direct login
+  const processUserSession = async (uid) => {
     try {
-      await addDoc(collection(db, "audit_submissions"), {
-        userId: uid,
-        scores: pendingScores,
-        completedAt: serverTimestamp(),
-        language: lang,
-        platform: 'web'
-      });
-      onAuthSuccess(pendingScores, uid);
+      let finalScores = pendingScores;
+
+      if (pendingScores) {
+        // CASE A: User completed audit in this session -> Save to Firestore
+        await addDoc(collection(db, "audit_submissions"), {
+          userId: uid,
+          scores: pendingScores,
+          completedAt: serverTimestamp(),
+          language: lang,
+          platform: 'web'
+        });
+      } else {
+        // CASE B: User logged in directly from Home -> Fetch their latest saved audit from Firestore
+        const submissionsRef = collection(db, "audit_submissions");
+        const q = query(
+          submissionsRef, 
+          where("userId", "==", uid), 
+          orderBy("completedAt", "desc"), 
+          limit(1)
+        );
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          const latestDoc = querySnapshot.docs[0].data();
+          finalScores = latestDoc.scores || null;
+        }
+      }
+
+      // Send the retrieved/saved scores back to App.js
+      onAuthSuccess(finalScores, uid);
     } catch (e) {
       console.error("Firestore Error:", e);
       setErrorMessage(t.firestoreError);
