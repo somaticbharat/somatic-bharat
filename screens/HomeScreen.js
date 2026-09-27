@@ -529,7 +529,7 @@ const styles = StyleSheet.create({
   scroll: { flexGrow: 1 },
   header: { backgroundColor: DEEP_BLUE, padding: 25, alignItems: 'center', paddingTop: 60 },
   headerLogoImage: { width: 60, height: 60, marginBottom: 10 },
-  logo: { fontSize: 20, fontWeight: '900', color: '#FFF', letterSpacing: 2 },
+  logo: { fontSize: 16, fontWeight: '900', color: '#FFF', letterSpacing: 2 },
   tagline: { color: MATTE_GOLD, fontSize: 10, fontWeight: 'bold', marginTop: 5, textAlign: 'center' },
   navBar: { backgroundColor: DEEP_BLUE, paddingVertical: 10 },
   navItem: { paddingHorizontal: 15, paddingVertical: 5, borderRadius: 5, marginHorizontal: 5 },
