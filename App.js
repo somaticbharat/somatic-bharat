@@ -3,8 +3,8 @@ import { SafeAreaView } from 'react-native';
 
 import HomeScreen from './screens/HomeScreen';
 import AuditScreen from './screens/AuditScreen';
-import ResultScreen from './screens/ResultScreen';      // Step 1: Shown right after 36 questions
-import AuthScreen from './screens/AuthScreen';          // Step 2: Triggered to save scores & sign in
+import ResultScreen from './screens/ResultScreen';       // Step 1: Shown right after 36 questions
+import AuthScreen from './screens/AuthScreen';         // Step 2: Triggered to save scores & sign in
 import DestinationScreen from './screens/DestinationScreen'; // Step 3: Final routed outcome
 
 export default function App() {
@@ -19,15 +19,6 @@ export default function App() {
   const toggleLang = () => setLang(prev => (prev === 'en' ? 'as' : 'en'));
 
   const startAudit = () => setView('AUDIT');
-  
-  // Direct login from Home Screen (skips audit)
-  const handleDirectLoginSuccess = () => {
-    // If logging in directly without completing the audit, set default or retrieved route
-    if (!userRoute) {
-      setUserRoute('APP_WAITLIST_AND_COMMUNITY');
-    }
-    setView('DESTINATION');
-  };
 
   // 1. Triggered when user finishes the 36th question -> Shows Result Screen immediately
   const handleAuditCompleteLocally = (scores) => {
@@ -57,9 +48,12 @@ export default function App() {
     }
   };
 
-  // 3. Triggered when authentication and score-saving succeed in AuthScreen
+  // 3. Centralized Auth Handler: Called by both AuthScreen and direct login from HomeScreen
   const handleAuthSuccess = (scores, uid) => {
-    const route = determineNextDestination(scores || auditResults);
+    const activeScores = scores || auditResults;
+    const route = determineNextDestination(activeScores);
+    
+    setAuditResults(activeScores);
     setUserRoute(route);
     setView('DESTINATION');
   };
@@ -77,7 +71,7 @@ export default function App() {
       {view === 'HOME' && (
         <HomeScreen 
           onStart={startAudit} 
-          onLoginSuccess={handleDirectLoginSuccess}
+          onLoginSuccess={handleAuthSuccess}
           lang={lang} 
           setLang={toggleLang} 
         />
@@ -113,7 +107,7 @@ export default function App() {
         />
       )}
 
-      {/* DESTINATION SCREEN (Waitlist / WhatsApp or Clinical Booking based on score) */}
+      {/* DESTINATION SCREEN (Waitlist / Clinical Booking based on score) */}
       {view === 'DESTINATION' && (
         <DestinationScreen 
           destination={userRoute} 
