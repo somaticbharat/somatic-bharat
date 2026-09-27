@@ -12,7 +12,7 @@ export default function App() {
   const [auditResults, setAuditResults] = useState(null);
   const [userRoute, setUserRoute] = useState(null);
   
-  // Set Assamese ('as') as the global initial state
+  // Set initial language state
   const [lang, setLang] = useState('en'); 
 
   // Logic to toggle between English and Assamese
@@ -20,6 +20,15 @@ export default function App() {
 
   const startAudit = () => setView('AUDIT');
   
+  // Direct login from Home Screen (skips audit)
+  const handleDirectLoginSuccess = () => {
+    // If logging in directly without completing the audit, set default or retrieved route
+    if (!userRoute) {
+      setUserRoute('APP_WAITLIST_AND_COMMUNITY');
+    }
+    setView('DESTINATION');
+  };
+
   // 1. Triggered when user finishes the 36th question -> Shows Result Screen immediately
   const handleAuditCompleteLocally = (scores) => {
     setAuditResults(scores);
@@ -33,6 +42,8 @@ export default function App() {
 
   // Score-based routing calculation
   const determineNextDestination = (scores) => {
+    if (!scores) return 'APP_WAITLIST_AND_COMMUNITY';
+    
     const totalScore = Object.values(scores).reduce((acc, val) => acc + val, 0);
     const HIGH_LOAD_THRESHOLD = 90; // Threshold out of 180
 
@@ -48,7 +59,7 @@ export default function App() {
 
   // 3. Triggered when authentication and score-saving succeed in AuthScreen
   const handleAuthSuccess = (scores, uid) => {
-    const route = determineNextDestination(scores);
+    const route = determineNextDestination(scores || auditResults);
     setUserRoute(route);
     setView('DESTINATION');
   };
@@ -66,6 +77,7 @@ export default function App() {
       {view === 'HOME' && (
         <HomeScreen 
           onStart={startAudit} 
+          onLoginSuccess={handleDirectLoginSuccess}
           lang={lang} 
           setLang={toggleLang} 
         />
