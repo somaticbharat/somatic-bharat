@@ -9,6 +9,8 @@ import DestinationScreen from './screens/DestinationScreen'; // Step 3: Final ro
 
 export default function App() {
   const [view, setView] = useState('HOME'); // 'HOME', 'AUDIT', 'RESULT', 'AUTH', 'DESTINATION'
+  
+  // STEP 1: Hold audit scores in top-level state so they persist across screen changes
   const [auditResults, setAuditResults] = useState(null);
   const [userRoute, setUserRoute] = useState(null);
   
@@ -20,13 +22,13 @@ export default function App() {
 
   const startAudit = () => setView('AUDIT');
 
-  // 1. Triggered when user finishes the 36th question -> Shows Result Screen immediately
+  // STEP 1 HANDLER: Captures completed scores from AuditScreen into App.js state
   const handleAuditCompleteLocally = (scores) => {
-    setAuditResults(scores);
-    setView('RESULT');
+    setAuditResults(scores); // Saves scores to App state
+    setView('RESULT');       // Swapping screen view won't lose auditResults
   };
 
-  // 2. Triggered when user clicks "Save Progress / Unlock Next Steps" on the Result Screen
+  // 2. Triggered when user clicks "Save Progress / Unlock Next Steps" on ResultScreen
   const handleProceedToAuth = () => {
     setView('AUTH');
   };
@@ -48,9 +50,10 @@ export default function App() {
     }
   };
 
-  // 3. Centralized Auth Handler: Called by both AuthScreen and direct login from HomeScreen
-  const handleAuthSuccess = (scores, uid) => {
-    const activeScores = scores || auditResults;
+  // STEP 2 & 3 HANDLER: Merges/passes state upon successful auth
+  const handleAuthSuccess = (scoresFromDb, uid) => {
+    // Prioritize DB scores, fall back to locally captured auditResults state
+    const activeScores = scoresFromDb || auditResults;
     const route = determineNextDestination(activeScores);
     
     setAuditResults(activeScores);
@@ -77,7 +80,7 @@ export default function App() {
         />
       )}
 
-      {/* AUDIT SCREEN (Handles 36 questions) */}
+      {/* AUDIT SCREEN (Passes completed scores up to App.js via onComplete) */}
       {view === 'AUDIT' && (
         <AuditScreen 
           onComplete={handleAuditCompleteLocally} 
@@ -87,7 +90,7 @@ export default function App() {
         />
       )}
 
-      {/* RESULT SCREEN (Shown immediately without forcing login first) */}
+      {/* RESULT SCREEN */}
       {view === 'RESULT' && (
         <ResultScreen 
           scores={auditResults} 
@@ -97,7 +100,7 @@ export default function App() {
         />
       )}
 
-      {/* AUTH SCREEN / MODAL (Appears when user clicks to save results) */}
+      {/* AUTH SCREEN (Passes pendingScores stored in App.js state) */}
       {view === 'AUTH' && (
         <AuthScreen 
           pendingScores={auditResults} 
@@ -107,7 +110,7 @@ export default function App() {
         />
       )}
 
-      {/* DESTINATION SCREEN (Waitlist / Clinical Booking based on score) */}
+      {/* DESTINATION SCREEN */}
       {view === 'DESTINATION' && (
         <DestinationScreen 
           destination={userRoute} 
