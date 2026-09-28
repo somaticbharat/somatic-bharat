@@ -1,47 +1,55 @@
 import React, { useState } from 'react';
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
 
 import HomeScreen from './screens/HomeScreen';
 import AuditScreen from './screens/AuditScreen';
-import ResultScreen from './screens/ResultScreen';       // Step 1: Shown right after 36 questions
-import AuthScreen from './screens/AuthScreen';         // Step 2: Triggered to save scores & sign in
+import ResultScreen from './screens/ResultScreen';       // Step 1: Shown after audit completion
+import AuthScreen from './screens/AuthScreen';         // Step 2: Saves scores & authenticates user
 import DestinationScreen from './screens/DestinationScreen'; // Step 3: Final routed outcome
 
 export default function App() {
   const [view, setView] = useState('HOME'); // 'HOME', 'AUDIT', 'RESULT', 'AUTH', 'DESTINATION'
   
-  // STEP 1: Hold audit scores in top-level state so they persist across screen changes
+  // State management for scores and routing
   const [auditResults, setAuditResults] = useState(null);
   const [userRoute, setUserRoute] = useState(null);
   
-  // Set initial language state
+  // Language toggle state ('en' | 'as')
   const [lang, setLang] = useState('en'); 
 
-  // Logic to toggle between English and Assamese
   const toggleLang = () => setLang(prev => (prev === 'en' ? 'as' : 'en'));
 
-  const startAudit = () => setView('AUDIT');
-
-  // STEP 1 HANDLER: Captures completed scores from AuditScreen into App.js state
-  const handleAuditCompleteLocally = (scores) => {
-    setAuditResults(scores); // Saves scores to App state
-    setView('RESULT');       // Swapping screen view won't lose auditResults
+  const startAudit = () => {
+    setAuditResults(null);
+    setView('AUDIT');
   };
 
-  // 2. Triggered when user clicks "Save Progress / Unlock Next Steps" on ResultScreen
+  // Step 1: Local capture after audit completion
+  const handleAuditCompleteLocally = (scores) => {
+    setAuditResults(scores);
+    setView('RESULT');
+  };
+
+  // Step 2: Navigation to Auth screen from ResultScreen
   const handleProceedToAuth = () => {
     setView('AUTH');
   };
 
-  // Score-based routing calculation
+  // Clinical/Somatic vector routing calculation
   const determineNextDestination = (scores) => {
-    if (!scores) return 'APP_WAITLIST_AND_COMMUNITY';
+    if (!scores || typeof scores !== 'object') return 'APP_WAITLIST_AND_COMMUNITY';
     
-    const totalScore = Object.values(scores).reduce((acc, val) => acc + val, 0);
+    const scoreValues = Object.values(scores);
+    if (scoreValues.length === 0) return 'APP_WAITLIST_AND_COMMUNITY';
+
+    const totalScore = scoreValues.reduce((acc, val) => acc + (Number(val) || 0), 0);
     const HIGH_LOAD_THRESHOLD = 90; // Threshold out of 180
 
     if (totalScore >= HIGH_LOAD_THRESHOLD) {
-      const highestVector = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+      const highestVector = Object.keys(scores).reduce((a, b) => 
+        (scores[a] || 0) > (scores[b] || 0) ? a : b
+      );
+
       return (highestVector === 'STRUCTURAL' || highestVector === 'MECHANICAL') 
         ? 'IN_PERSON_VISIT' 
         : 'TELECONSULTATION';
@@ -50,10 +58,10 @@ export default function App() {
     }
   };
 
-  // STEP 2 & 3 HANDLER: Merges/passes state upon successful auth
+  // Step 3: Auth completion callback (Merges Firestore data & calculates route)
   const handleAuthSuccess = (scoresFromDb, uid) => {
-    // Prioritize DB scores, fall back to locally captured auditResults state
-    const activeScores = scoresFromDb || auditResults;
+    // Prioritize DB scores, then local state, or default to null
+    const activeScores = scoresFromDb || auditResults || null;
     const route = determineNextDestination(activeScores);
     
     setAuditResults(activeScores);
@@ -68,7 +76,8 @@ export default function App() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFF' }}>
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#F9F8F4" />
       
       {/* HOME SCREEN */}
       {view === 'HOME' && (
@@ -80,7 +89,7 @@ export default function App() {
         />
       )}
 
-      {/* AUDIT SCREEN (Passes completed scores up to App.js via onComplete) */}
+      {/* AUDIT SCREEN */}
       {view === 'AUDIT' && (
         <AuditScreen 
           onComplete={handleAuditCompleteLocally} 
@@ -100,13 +109,14 @@ export default function App() {
         />
       )}
 
-      {/* AUTH SCREEN (Passes pendingScores stored in App.js state) */}
+      {/* AUTH SCREEN */}
       {view === 'AUTH' && (
         <AuthScreen 
           pendingScores={auditResults} 
           lang={lang}
           setLang={toggleLang}
-          onAuthSuccess={handleAuthSuccess} 
+          onAuthSuccess={handleAuthSuccess}
+          onBack={() => setView(auditResults ? 'RESULT' : 'HOME')} 
         />
       )}
 
@@ -124,3 +134,10 @@ export default function App() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F9F8F4',
+  },
+});

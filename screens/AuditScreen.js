@@ -76,7 +76,7 @@ const QUESTIONS = [
   { v: 'STRUCTURAL', en: "Are you experiencing a profound drop in personal vitality, physical drive, or libido, which frequently tracks alongside chronic, system-wide nervous system exhaustion?", as: "স্নায়ুতন্ত্ৰৰ ক্ৰনিক ভাগৰৰ বাবে আপোনাৰ শাৰীৰিক শক্তি, উৎসাহ বা যৌন আগ্ৰহ তীব্ৰভাৱে হ্ৰাস পাইছে নেকি?" },
 
   // HUMORAL VECTOR
-  { v: 'HUMORAL', en: "Do you struggle with persistent overthinking or racing mental loops, especially at night, that physically prevent your body and muscles from settling down?", as: "আপুনি অবিৰাম অতি-চিন্তা বা অনবৰতে মনলê অহা চিন্তাত ভোগে নেকি, বিশেষকৈ ৰাতিৰ সময়ত, যিয়ে আপোনাৰ শৰীৰ আৰু পেশীবোৰক শান্ত হ'বলৈ নিদিয়ে?" },
+  { v: 'HUMORAL', en: "Do you struggle with persistent overthinking or racing mental loops, especially at night, that physically prevent your body and muscles from settling down?", as: "আপুনি অবিৰাম অতি-চিন্তা বা অনবৰতে মনলৈ অহা চিন্তাত ভোগে নেকি, বিশেষকৈ ৰাতিৰ সময়ত, যিয়ে আপোনাৰ শৰীৰ আৰু পেশীবোৰক শান্ত হ'বলৈ নিদিয়ে?" },
   { v: 'HUMORAL', en: "Do you notice your breath becomes shallow, rapid, or completely held in your chest when managing normal, daily intellectual workloads?", as: "দৈনন্দিন কাম-কাজৰ সময়ত আপোনাৰ উশাহ-নিশাহ সৰু, দ্ৰুত বা ছাত আৱদ্ধ হৈ পৰা যেন অনুভৱ কৰে নেকি?" },
   { v: 'HUMORAL', en: "Does your physical recovery time after mild daily tasks or light home errands take days rather than hours?", as: "সামান্য ঘৰুৱা কাম বা দৈনিক পৰিশ্ৰমৰ পাছত সুস্থ হ’বলৈ আপোনাক কেইবা ঘণ্টাৰ পৰিৱৰ্তে কেইবাদিনো লাগে নেকি?" },
   { v: 'HUMORAL', en: "Do your muscles consistently feel cool or numb in certain regions, indicating local circulatory stagnation or high sympathetic constriction?", as: "আপোনাৰ শৰীৰৰ কিছুমান অংশৰ পেশী সদায় ঠাণ্ডা বা অৱশ যেন লাগে নেকি, যিয়ে ৰক্ত সঞ্চালনৰ মন্থৰতা বুজায়?" },
@@ -97,13 +97,14 @@ export default function AuditScreen({ onComplete, onExit, lang = 'en', setLang }
   const handleAnswer = (val) => {
     const vector = QUESTIONS[current].v;
     const newScores = { ...scores, [vector]: scores[vector] + val };
+    
+    setScores(newScores);
     setHistory([...history, val]);
 
     if (current < QUESTIONS.length - 1) {
-      setScores(newScores);
       setCurrent(current + 1);
     } else {
-      onComplete(newScores); 
+      if (onComplete) onComplete(newScores); 
     }
   };
 
@@ -159,15 +160,19 @@ export default function AuditScreen({ onComplete, onExit, lang = 'en', setLang }
           <Text style={styles.disclaimerText}>{t.disclaimer}</Text>
         </View>
 
-        <TouchableOpacity style={styles.backBtn} onPress={handleBack}>
-          <MaterialCommunityIcons name="arrow-left" size={20} color={MATTE_GOLD} />
-          <Text style={styles.backBtnText}>{t.back}</Text>
-        </TouchableOpacity>
+        {/* RELATIVE BACK BUTTON & METRICS CONTAINER */}
+        <View style={styles.subHeaderNav}>
+          <TouchableOpacity style={styles.backBtnInline} onPress={handleBack}>
+            <MaterialCommunityIcons name="arrow-left" size={18} color={MATTE_GOLD} />
+            <Text style={styles.backBtnText}>{t.back}</Text>
+          </TouchableOpacity>
 
-        <Text style={styles.progressText}>{t.vector}: {QUESTIONS[current].v}</Text>
+          <Text style={styles.progressText}>{t.vector}: {QUESTIONS[current].v}</Text>
+        </View>
+
         <Text style={styles.stepText}>{t.step} {current + 1} / 36</Text>
         <View style={styles.progressBar}>
-            <View style={[styles.progressFill, { width: `${((current + 1) / 36) * 100}%` }]} />
+          <View style={[styles.progressFill, { width: `${((current + 1) / 36) * 100}%` }]} />
         </View>
       </View>
 
@@ -200,14 +205,14 @@ const styles = StyleSheet.create({
   homeBtn: { backgroundColor: '#FFF', padding: 8, borderRadius: 20, elevation: 3, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 2 },
   langToggle: { backgroundColor: MATTE_GOLD, paddingVertical: 8, paddingHorizontal: 12, borderRadius: 20 },
   langToggleText: { color: DEEP_BLUE, fontWeight: '900', fontSize: 10 },
-  header: { padding: 20, borderBottomWidth: 1, borderColor: '#EEE', alignItems: 'center' },
+  header: { paddingHorizontal: 20, paddingTop: 10, paddingBottom: 15, borderBottomWidth: 1, borderColor: '#EEE', alignItems: 'center' },
   disclaimerBox: {
     backgroundColor: '#FFF3CD',
     borderColor: '#FFEEBA',
     borderWidth: 1,
     padding: 8,
     borderRadius: 6,
-    marginBottom: 15,
+    marginBottom: 10,
     width: '100%'
   },
   disclaimerText: {
@@ -217,11 +222,12 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     lineHeight: 13,
   },
-  backBtn: { position: 'absolute', left: 20, top: 75, flexDirection: 'row', alignItems: 'center' },
-  backBtnText: { color: MATTE_GOLD, fontSize: 12, fontWeight: 'bold', marginLeft: 5 },
-  progressText: { color: MATTE_GOLD, fontWeight: '900', fontSize: 11, letterSpacing: 1.5, marginTop: 5 },
+  subHeaderNav: { width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginVertical: 4 },
+  backBtnInline: { flexDirection: 'row', alignItems: 'center' },
+  backBtnText: { color: MATTE_GOLD, fontSize: 12, fontWeight: 'bold', marginLeft: 4 },
+  progressText: { color: MATTE_GOLD, fontWeight: '900', fontSize: 11, letterSpacing: 1.5 },
   stepText: { color: '#999', fontSize: 10, marginTop: 4, fontWeight: '600' },
-  progressBar: { height: 4, width: '100%', backgroundColor: '#EEE', marginTop: 15, borderRadius: 2, overflow: 'hidden' },
+  progressBar: { height: 4, width: '100%', backgroundColor: '#EEE', marginTop: 12, borderRadius: 2, overflow: 'hidden' },
   progressFill: { height: '100%', backgroundColor: '#004D40' },
   scrollContainer: { flexGrow: 1, justifyContent: 'center' },
   qBox: { padding: 30 },

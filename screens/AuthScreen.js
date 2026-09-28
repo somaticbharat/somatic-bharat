@@ -8,7 +8,7 @@ import {
   GoogleAuthProvider, 
   signInWithPopup 
 } from 'firebase/auth';
-import { collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
+import { collection, doc, setDoc, getDoc, getDocs, query, where, serverTimestamp } from 'firebase/firestore';
 
 const DEEP_BLUE = '#002147';
 const MATTE_GOLD = '#C5A059';
@@ -52,9 +52,9 @@ const translations = {
   }
 };
 
-export default function AuthScreen({ pendingScores, lang = 'en', onAuthSuccess }) {
+export default function AuthScreen({ pendingScores, lang = 'en', onAuthSuccess, onBack }) {
   const [authMode, setAuthMode] = useState('select'); // 'select', 'email'
-  const [isSignUp, setIsSignUp] = useState(false); // Default to Login for returning users
+  const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -98,39 +98,45 @@ export default function AuthScreen({ pendingScores, lang = 'en', onAuthSuccess }
     }
   };
 
-  // 3. Save new audit OR fetch existing audit for direct login
+  // 3. Save new audit OR fetch existing audit cleanly
   const processUserSession = async (uid) => {
     try {
       let finalScores = pendingScores;
 
-      if (pendingScores) {
-        // CASE A: User completed audit in this session -> Save to Firestore
-        await addDoc(collection(db, "audit_submissions"), {
+      const userDocRef = doc(db, "audit_submissions", uid);
+
+      if (pendingScores && Object.values(pendingScores).some(v => v > 0)) {
+        // CASE A: User completed audit -> Save to Firestore using predictable UID document
+        await setDoc(userDocRef, {
           userId: uid,
           scores: pendingScores,
           completedAt: serverTimestamp(),
           language: lang,
           platform: 'web'
-        });
+        }, { merge: true });
       } else {
-        // CASE B: User logged in directly from Home -> Fetch their latest saved audit from Firestore
-        const submissionsRef = collection(db, "audit_submissions");
-        const q = query(
-          submissionsRef, 
-          where("userId", "==", uid), 
-          orderBy("completedAt", "desc"), 
-          limit(1)
-        );
-        const querySnapshot = await getDocs(q);
+        // CASE B: Direct Login -> Fetch user's document directly (No index required)
+        const docSnap = await getDoc(userDocRef);
 
-        if (!querySnapshot.empty) {
-          const latestDoc = querySnapshot.docs[0].data();
-          finalScores = latestDoc.scores || null;
+        if (docSnap.exists()) {
+          finalScores = docSnap.data().scores || null;
+        } else {
+          // Fallback query if documents were saved under random auto-IDs previously
+          const submissionsRef = collection(db, "audit_submissions");
+          const q = query(submissionsRef, where("userId", "==", uid));
+          const querySnapshot = await getDocs(q);
+
+          if (!querySnapshot.empty) {
+            // Pick the first match
+            finalScores = querySnapshot.docs[0].data().scores || null;
+          }
         }
       }
 
-      // Send the retrieved/saved scores back to App.js
-      onAuthSuccess(finalScores, uid);
+      // Send valid scores back to App.js
+      if (onAuthSuccess) {
+        onAuthSuccess(finalScores, uid);
+      }
     } catch (e) {
       console.error("Firestore Error:", e);
       setErrorMessage(t.firestoreError);
@@ -174,6 +180,12 @@ export default function AuthScreen({ pendingScores, lang = 'en', onAuthSuccess }
                   <MaterialCommunityIcons name="email-outline" size={20} color={DEEP_BLUE} />
                   <Text style={styles.emailBtnText}>{t.emailBtn}</Text>
                 </TouchableOpacity>
+
+                {onBack && (
+                  <TouchableOpacity onPress={onBack} style={styles.backLinkContainer}>
+                    <Text style={styles.backText}>{t.backMethod}</Text>
+                  </TouchableOpacity>
+                )}
               </View>
             )}
 
